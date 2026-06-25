@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ArrowUp } from "lucide-react";
 import { useLedger } from "@/lib/store";
-import { COPILOT_PROMPTS, generateCopilotResponse, type CopilotPromptKey } from "@/lib/ai";
+import { COPILOT_PROMPTS, generateCopilotResponse, routeFreeTextPrompt, type CopilotPromptKey } from "@/lib/ai";
 import { AiSummaryCard } from "@/components/AiSummaryCard";
 
 export default function CopilotPage() {
@@ -11,8 +11,9 @@ export default function CopilotPage() {
   const [active, setActive] = useState<CopilotPromptKey | null>(null);
   const [response, setResponse] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState("");
 
-  function handlePrompt(key: CopilotPromptKey) {
+  function runPrompt(key: CopilotPromptKey) {
     setActive(key);
     setLoading(true);
     setResponse(null);
@@ -22,42 +23,75 @@ export default function CopilotPage() {
     }, 500);
   }
 
+  function handleSend() {
+    const trimmed = input.trim();
+    if (!trimmed) return;
+    runPrompt(routeFreeTextPrompt(trimmed));
+    setInput("");
+  }
+
   return (
-    <div className="px-5 pt-6">
+    <div className="flex h-full flex-col px-5 pt-6">
       <header className="mb-6">
         <p className="text-xs font-medium uppercase tracking-wide text-muted">Growth Companion</p>
-        <h1 className="mt-1 text-[26px] font-semibold tracking-tight">AI Copilot</h1>
+        <h1 className="mt-1 text-[26px] font-semibold tracking-tight">Hi — what would you like to explore?</h1>
       </header>
 
-      <div className="mb-5 grid grid-cols-1 gap-2.5">
-        {COPILOT_PROMPTS.map((p) => (
-          <button
-            key={p.key}
-            onClick={() => handlePrompt(p.key)}
-            className={`card-surface flex items-center gap-3 p-4 text-left transition-all active:scale-[0.98] ${
-              active === p.key ? "ring-2 ring-[#8a5cf6]/40" : ""
-            }`}
-          >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-accent text-white">
-              <Sparkles size={15} />
-            </div>
-            <span className="text-[14px] font-medium">{p.label}</span>
-          </button>
-        ))}
+      <div className="flex-1 overflow-y-auto pb-28">
+        <div className="mb-5 grid grid-cols-1 gap-2.5">
+          {COPILOT_PROMPTS.map((p) => (
+            <button
+              key={p.key}
+              onClick={() => runPrompt(p.key)}
+              className={`card-surface flex items-center gap-3 p-4 text-left transition-all active:scale-[0.98] ${
+                active === p.key ? "ring-2 ring-[#8a5cf6]/40" : ""
+              }`}
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-accent text-white">
+                <Sparkles size={15} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[14px] font-medium leading-tight">{p.label}</p>
+                <p className="truncate text-xs text-muted">{p.description}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {active && (
+          <div>
+            {loading ? (
+              <div className="card-surface flex items-center gap-2 p-4 text-sm text-muted">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[#8a5cf6]" />
+                Thinking through your journey...
+              </div>
+            ) : response ? (
+              <AiSummaryCard text={response} />
+            ) : null}
+          </div>
+        )}
       </div>
 
-      {active && (
-        <div>
-          {loading ? (
-            <div className="card-surface flex items-center gap-2 p-4 text-sm text-muted">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-[#8a5cf6]" />
-              Thinking through your journey...
-            </div>
-          ) : response ? (
-            <AiSummaryCard text={response} />
-          ) : null}
+      <div className="fixed inset-x-0 bottom-24 z-30 flex justify-center px-5">
+        <div className="flex w-full max-w-sm items-center gap-2 rounded-full border border-border bg-surface/95 p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSend();
+            }}
+            placeholder="Ask anything about your journey..."
+            className="flex-1 bg-transparent px-3 text-[14px] outline-none"
+          />
+          <button
+            onClick={handleSend}
+            aria-label="Send"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-accent text-white"
+          >
+            <ArrowUp size={16} />
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }

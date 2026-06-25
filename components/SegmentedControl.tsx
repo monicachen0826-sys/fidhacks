@@ -7,7 +7,7 @@ export function SegmentedControl<T extends string>({
   value,
   onChange,
 }: {
-  options: { value: T; label: string }[];
+  options: { value: T; label: string; selectedClassName?: string }[];
   value: T;
   onChange: (value: T) => void;
 }) {
@@ -20,7 +20,9 @@ export function SegmentedControl<T extends string>({
           onClick={() => onChange(opt.value)}
           className={cn(
             "flex-1 rounded-full px-2.5 py-2 text-[13px] font-medium transition-all",
-            value === opt.value ? "bg-surface text-foreground shadow-sm" : "text-muted"
+            value === opt.value
+              ? opt.selectedClassName ?? "bg-surface text-foreground shadow-sm"
+              : "text-muted"
           )}
         >
           {opt.label}

@@ -2,36 +2,60 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { EventTimelineRow } from "@/components/EventTimelineRow";
-import type { TimelineFilter } from "@/lib/types";
+import { ScreenHeader } from "@/components/ScreenHeader";
 
-const FILTERS: { value: TimelineFilter; label: string }[] = [
-  { value: "all", label: "All" },
+type LifeFilter = "life" | "professional" | "personal";
+
+const FILTERS: { value: LifeFilter; label: string }[] = [
+  { value: "life", label: "Life" },
   { value: "professional", label: "Professional" },
   { value: "personal", label: "Personal" },
-  { value: "portfolio", label: "Portfolio" },
 ];
+
+function monthLabel(date: string) {
+  return new Date(date).toLocaleDateString(undefined, { month: "short" });
+}
+
+function yearLabel(date: string) {
+  return new Date(date).getFullYear().toString();
+}
 
 export default function HomePage() {
   const { events } = useLedger();
-  const [filter, setFilter] = useState<TimelineFilter>("all");
+  const [filter, setFilter] = useState<LifeFilter>("life");
 
   const visible = useMemo(() => {
     const sorted = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    if (filter === "all") return sorted;
-    if (filter === "portfolio") return sorted.filter((e) => e.visibility === "portfolio");
-    return sorted.filter((e) => e.category === filter || e.category === "both");
+    const filtered = filter === "life" ? sorted : sorted.filter((e) => e.category === filter || e.category === "both");
+    return filtered.reduce<{ event: typeof filtered[number]; showMonthLabel: boolean }[]>((acc, event) => {
+      const monthKey = `${yearLabel(event.date)}-${monthLabel(event.date)}`;
+      const prevKey = acc.length
+        ? `${yearLabel(acc[acc.length - 1].event.date)}-${monthLabel(acc[acc.length - 1].event.date)}`
+        : "";
+      acc.push({ event, showMonthLabel: monthKey !== prevKey });
+      return acc;
+    }, []);
   }, [events, filter]);
 
   return (
     <div className="relative px-5 pt-6">
-      <header className="mb-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted">Proof-of-Skill Ledger</p>
-        <h1 className="mt-1 text-[26px] font-semibold tracking-tight">Your Journey</h1>
-      </header>
+      <ScreenHeader
+        title="Your Journey"
+        subtitle="Proof-of-Skill Ledger"
+        right={
+          <Link
+            href="/portfolio"
+            aria-label="Open portfolio"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-foreground"
+          >
+            <BookOpen size={16} />
+          </Link>
+        }
+      />
 
       <div className="mb-6">
         <SegmentedControl options={FILTERS} value={filter} onChange={setFilter} />
@@ -43,19 +67,23 @@ export default function HomePage() {
         </div>
       ) : (
         <div>
-          {visible.map((event, i) => (
-            <EventTimelineRow key={event.id} event={event} isLast={i === visible.length - 1} />
+          {visible.map(({ event, showMonthLabel }, i) => (
+            <div key={event.id} className="flex gap-3">
+              <div className="w-10 shrink-0 pt-2 text-right">
+                {showMonthLabel && (
+                  <>
+                    <p className="text-[11px] font-semibold text-foreground/70">{monthLabel(event.date)}</p>
+                    <p className="text-[10px] text-muted">{yearLabel(event.date)}</p>
+                  </>
+                )}
+              </div>
+              <div className="flex-1">
+                <EventTimelineRow event={event} isLast={i === visible.length - 1} />
+              </div>
+            </div>
           ))}
         </div>
       )}
-
-      <Link
-        href="/event/new"
-        className="fixed bottom-28 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full gradient-accent text-white shadow-[0_10px_30px_rgba(80,80,255,0.35)] active:scale-95"
-        aria-label="Add new event"
-      >
-        <Plus size={26} strokeWidth={2.5} />
-      </Link>
     </div>
   );
 }

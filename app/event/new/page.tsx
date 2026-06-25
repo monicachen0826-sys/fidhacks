@@ -2,15 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ChevronLeft, Upload } from "lucide-react";
+import { ChevronLeft, Upload, Plus, X } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { SegmentedControl } from "@/components/SegmentedControl";
-import { SignificanceDots } from "@/components/SignificanceDots";
+import { ImpactSlider } from "@/components/ImpactSlider";
 import { Field } from "@/components/ui/field";
 import { Input, Textarea } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import type { Category, Significance, Visibility } from "@/lib/types";
+
+const DESCRIPTION_LIMIT = 500;
 
 export default function NewEventPage() {
   const router = useRouter();
@@ -21,10 +24,22 @@ export default function NewEventPage() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [description, setDescription] = useState("");
   const [significance, setSignificance] = useState<Significance>(3);
-  const [skillsInput, setSkillsInput] = useState("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [skillInput, setSkillInput] = useState("");
   const [visibility, setVisibility] = useState<Visibility>("private");
 
   const canSave = title.trim().length > 0 && description.trim().length > 0;
+
+  function addSkill() {
+    const trimmed = skillInput.trim();
+    if (!trimmed || skills.includes(trimmed)) return;
+    setSkills([...skills, trimmed]);
+    setSkillInput("");
+  }
+
+  function removeSkill(skill: string) {
+    setSkills(skills.filter((s) => s !== skill));
+  }
 
   function handleSave() {
     if (!canSave) return;
@@ -35,10 +50,7 @@ export default function NewEventPage() {
       description: description.trim(),
       significance,
       visibility,
-      skills: skillsInput
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
+      skills,
     });
     router.push(`/event/${event.id}`);
   }
@@ -58,9 +70,9 @@ export default function NewEventPage() {
       <Field label="Category">
         <SegmentedControl<Category>
           options={[
-            { value: "professional", label: "Professional" },
-            { value: "personal", label: "Personal" },
-            { value: "both", label: "Both" },
+            { value: "professional", label: "Professional", selectedClassName: "bg-blue-500 text-white shadow-sm" },
+            { value: "personal", label: "Personal", selectedClassName: "bg-pink-500 text-white shadow-sm" },
+            { value: "both", label: "Both", selectedClassName: "bg-purple-500 text-white shadow-sm" },
           ]}
           value={category}
           onChange={setCategory}
@@ -72,15 +84,55 @@ export default function NewEventPage() {
       </Field>
 
       <Field label="Description" hint="What happened?">
-        <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Tell the story..." />
+        <Textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value.slice(0, DESCRIPTION_LIMIT))}
+          placeholder="Tell the story..."
+          maxLength={DESCRIPTION_LIMIT}
+        />
+        <p className="mt-1 text-right text-[11px] text-muted">
+          {description.length}/{DESCRIPTION_LIMIT}
+        </p>
       </Field>
 
       <Field label="Significance level">
-        <SignificanceDots value={significance} onChange={setSignificance} />
+        <ImpactSlider value={significance} onChange={setSignificance} />
       </Field>
 
-      <Field label="Skills / tags" hint="Comma separated, e.g. Leadership, Communication">
-        <Input value={skillsInput} onChange={(e) => setSkillsInput(e.target.value)} placeholder="Leadership, Communication" />
+      <Field label="Skills / tags" hint="Add one at a time">
+        <div className="flex gap-2">
+          <Input
+            value={skillInput}
+            onChange={(e) => setSkillInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addSkill();
+              }
+            }}
+            placeholder="e.g. Leadership"
+          />
+          <button
+            type="button"
+            onClick={addSkill}
+            aria-label="Add skill"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl gradient-accent text-white"
+          >
+            <Plus size={18} />
+          </button>
+        </div>
+        {skills.length > 0 && (
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {skills.map((s) => (
+              <Badge key={s} className="flex items-center gap-1 pr-1.5">
+                {s}
+                <button type="button" onClick={() => removeSkill(s)} aria-label={`Remove ${s}`}>
+                  <X size={11} />
+                </button>
+              </Badge>
+            ))}
+          </div>
+        )}
       </Field>
 
       <Field label="Evidence" hint="Optional — attach a link, photo, or document">

@@ -36,12 +36,12 @@ export type CopilotPromptKey =
   | "connect-growth"
   | "reflect";
 
-export const COPILOT_PROMPTS: { key: CopilotPromptKey; label: string }[] = [
-  { key: "summarize-growth", label: "Summarize my growth" },
-  { key: "strongest-skills", label: "Identify my strongest skills" },
-  { key: "resume-language", label: "Turn this into resume language" },
-  { key: "connect-growth", label: "Connect my personal and professional growth" },
-  { key: "reflect", label: "Help me reflect" },
+export const COPILOT_PROMPTS: { key: CopilotPromptKey; label: string; description: string }[] = [
+  { key: "summarize-growth", label: "Summarize my growth", description: "A high-level look at your progress so far" },
+  { key: "strongest-skills", label: "Identify my strongest skills", description: "Spot the skills that show up again and again" },
+  { key: "resume-language", label: "Turn this into resume language", description: "Convert your wins into resume-ready bullets" },
+  { key: "connect-growth", label: "Connect my personal and professional growth", description: "See how the two sides reinforce each other" },
+  { key: "reflect", label: "Help me reflect", description: "A prompt to think deeper about your journey" },
 ];
 
 export function generateCopilotResponse(
@@ -75,4 +75,13 @@ export function generateCopilotResponse(
     case "reflect":
       return "Take a moment: which of these moments surprised you most about yourself? Growth often hides in the events you almost didn't log — the messy middle, not just the win at the end.";
   }
+}
+
+export function routeFreeTextPrompt(input: string): CopilotPromptKey {
+  const q = input.toLowerCase();
+  if (q.includes("skill")) return "strongest-skills";
+  if (q.includes("resume")) return "resume-language";
+  if (q.includes("reflect") || q.includes("help")) return "reflect";
+  if (q.includes("connect") || q.includes("personal")) return "connect-growth";
+  return "summarize-growth";
 }

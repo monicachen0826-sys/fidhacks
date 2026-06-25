@@ -1,16 +1,15 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { useParams } from "next/navigation";
+import { CheckCircle2, Pencil, Share2, Bookmark, Trash2, ImageIcon } from "lucide-react";
 import { useLedger } from "@/lib/store";
-import { Bubble } from "@/components/Bubble";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { SignificanceDots } from "@/components/SignificanceDots";
 import { AiSummaryCard } from "@/components/AiSummaryCard";
 import { Badge } from "@/components/ui/badge";
 
 export default function SubEventDetailPage() {
   const { id, subId } = useParams<{ id: string; subId: string }>();
-  const router = useRouter();
   const { getEvent, getSubEvent } = useLedger();
   const event = getEvent(id);
   const sub = getSubEvent(id, subId);
@@ -23,34 +22,53 @@ export default function SubEventDetailPage() {
     );
   }
 
+  const handleShare = () => {
+    const summary = `${sub.title} (${event.title}) — ${sub.description}`;
+    navigator.clipboard?.writeText(summary);
+  };
+
   return (
     <div className="px-5 pt-6">
-      <button onClick={() => router.back()} className="mb-4 flex items-center gap-1 text-sm font-medium text-muted">
-        <ChevronLeft size={16} /> Back to {event.title}
-      </button>
+      <ScreenHeader
+        title={sub.title}
+        subtitle={`Micro-win in ${event.title}`}
+        showBack
+        right={
+          <button
+            aria-label="Edit micro-win"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-foreground"
+          >
+            <Pencil size={15} />
+          </button>
+        }
+      />
 
-      <div className="flex flex-col items-center text-center">
-        <Bubble category={event.category} significance={sub.significance} className="mb-4 h-24 w-24 text-sm font-semibold">
-          {sub.skillTags[0]?.slice(0, 2).toUpperCase()}
-        </Bubble>
-        <h1 className="text-lg font-semibold tracking-tight">{sub.title}</h1>
-        <p className="mt-1 text-sm text-muted">
-          {new Date(sub.date).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
-        </p>
-        <div className="mt-3 flex flex-wrap justify-center gap-1.5">
-          {sub.skillTags.map((s) => (
-            <Badge key={s}>{s}</Badge>
-          ))}
+      <div className="card-surface flex items-start justify-between p-4">
+        <div className="flex items-center gap-2.5">
+          <CheckCircle2 size={22} className="shrink-0 text-emerald-500" />
+          <div>
+            <p className="text-[14px] font-medium leading-tight">
+              {new Date(sub.date).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
+            </p>
+            <span className="mt-1 inline-block rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted">
+              Milestone
+            </span>
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted">Impact</p>
+          <SignificanceDots value={sub.significance} size="sm" />
         </div>
       </div>
 
-      <div className="card-surface mt-6 flex items-center justify-between p-4">
-        <p className="text-sm font-medium">Significance</p>
-        <SignificanceDots value={sub.significance} />
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {sub.skillTags.map((s) => (
+          <Badge key={s}>{s}</Badge>
+        ))}
       </div>
 
       <div className="card-surface mt-3 p-4">
-        <p className="text-sm font-medium">What happened?</p>
+        <p className="text-sm font-medium">What happened</p>
         <p className="mt-1 text-[14px] leading-relaxed text-foreground/90">{sub.description}</p>
       </div>
 
@@ -64,8 +82,9 @@ export default function SubEventDetailPage() {
       {sub.evidenceUrl && (
         <div className="card-surface mt-3 p-4">
           <p className="text-sm font-medium">Evidence</p>
-          <a href={sub.evidenceUrl} className="mt-1 block text-sm text-[#4f7cff] underline">
-            {sub.evidenceUrl}
+          <a href={sub.evidenceUrl} className="mt-2 flex h-28 items-center justify-center gap-2 rounded-xl gradient-accent text-white">
+            <ImageIcon size={20} />
+            <span className="text-xs font-medium">View attachment</span>
           </a>
         </div>
       )}
@@ -75,6 +94,27 @@ export default function SubEventDetailPage() {
           <AiSummaryCard text={sub.aiSummary} />
         </div>
       )}
+
+      <div className="mt-5 flex items-center justify-center gap-6 pb-4">
+        <button onClick={handleShare} aria-label="Share" className="flex flex-col items-center gap-1 text-muted">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5">
+            <Share2 size={16} />
+          </div>
+          <span className="text-[10px] font-medium">Share</span>
+        </button>
+        <button aria-label="Bookmark" className="flex flex-col items-center gap-1 text-muted">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5">
+            <Bookmark size={16} />
+          </div>
+          <span className="text-[10px] font-medium">Save</span>
+        </button>
+        <button aria-label="Delete" className="flex flex-col items-center gap-1 text-muted">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5">
+            <Trash2 size={16} />
+          </div>
+          <span className="text-[10px] font-medium">Delete</span>
+        </button>
+      </div>
     </div>
   );
 }
