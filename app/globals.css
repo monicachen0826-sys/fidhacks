@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f5f7;
+  --surface: #ffffff;
+  --foreground: #1d1d1f;
+  --muted: #6e6e73;
+  --border: #e5e5ea;
+  --accent-from: #8a5cf6;
+  --accent-to: #4f7cff;
+  --professional-from: #4f7cff;
+  --professional-to: #34c8e8;
+  --personal-from: #ff7a8a;
+  --personal-to: #ff9f5a;
+  --portfolio-from: #34d399;
+  --portfolio-to: #22c1a4;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --font-sans: var(--font-sf);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sf), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gradient-accent {
+  background-image: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+}
+
+.gradient-professional {
+  background-image: linear-gradient(135deg, var(--professional-from), var(--professional-to));
+}
+
+.gradient-personal {
+  background-image: linear-gradient(135deg, var(--personal-from), var(--personal-to));
+}
+
+.gradient-portfolio {
+  background-image: linear-gradient(135deg, var(--portfolio-from), var(--portfolio-to));
+}
+
+.card-surface {
+  background: var(--surface);
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -8px rgba(0, 0, 0, 0.08);
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
