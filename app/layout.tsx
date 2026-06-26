@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LedgerProvider } from "@/lib/store";
+import { OnboardingProvider } from "@/lib/onboarding-store";
+import { OnboardingGate } from "@/components/OnboardingGate";
+import { IPhoneFrame } from "@/components/IPhoneFrame";
 import BottomTabBar from "@/components/BottomTabBar";
 
 export const metadata: Metadata = {
@@ -22,13 +25,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-background text-foreground">
-        <LedgerProvider>
-          <div className="mx-auto flex min-h-screen w-full max-w-md flex-col">
-            <main className="flex-1 pb-28">{children}</main>
-            <BottomTabBar />
-          </div>
-        </LedgerProvider>
+      <body className="bg-background text-foreground">
+        <IPhoneFrame>
+          <LedgerProvider>
+            <OnboardingProvider>
+              <OnboardingGate>
+                <div className="flex h-full w-full flex-col">
+                  <main className="flex-1 overflow-y-auto pb-28">{children}</main>
+                  <BottomTabBar />
+                </div>
+              </OnboardingGate>
+            </OnboardingProvider>
+          </LedgerProvider>
+        </IPhoneFrame>
       </body>
     </html>
   );
