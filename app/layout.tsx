@@ -3,6 +3,7 @@ import "./globals.css";
 import { LedgerProvider } from "@/lib/store";
 import { OnboardingProvider } from "@/lib/onboarding-store";
 import { ProfileProvider } from "@/lib/profile-store";
+import { AuthProvider } from "@/lib/auth-store";
 import { AppShell } from "@/components/AppShell";
 
 export const metadata: Metadata = {
@@ -21,13 +22,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full text-foreground">
-        <LedgerProvider>
-          <OnboardingProvider>
-            <ProfileProvider>
-              <AppShell>{children}</AppShell>
-            </ProfileProvider>
-          </OnboardingProvider>
-        </LedgerProvider>
+        <AuthProvider>
+          <LedgerProvider>
+            <OnboardingProvider>
+              <ProfileProvider>
+                <AppShell>{children}</AppShell>
+              </ProfileProvider>
+            </OnboardingProvider>
+          </LedgerProvider>
+        </AuthProvider>
       </body>
     </html>
   );
