@@ -4,8 +4,8 @@ import { LedgerProvider } from "@/lib/store";
 import BottomTabBar from "@/components/BottomTabBar";
 
 export const metadata: Metadata = {
-  title: "Probble",
-  description: "Every milestone. Every win. Forever.",
+  title: "My Ledger",
+  description: "Your life. Visualized.",
 };
 
 export const viewport: Viewport = {
