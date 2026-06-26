@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import { Menu, SlidersHorizontal, List } from "lucide-react";
 import { useLedger } from "@/lib/store";
+import { useOnboarding } from "@/lib/onboarding-store";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { EventZigzagTimeline } from "@/components/EventZigzagTimeline";
+import { sortEventsForDashboard, dashboardSubtitle } from "@/lib/personalization";
 
 type LifeFilter = "life" | "professional" | "personal";
 
@@ -16,13 +18,16 @@ const FILTERS: { value: LifeFilter; label: string }[] = [
 
 export default function HomePage() {
   const { events } = useLedger();
+  const { goals } = useOnboarding();
   const [filter, setFilter] = useState<LifeFilter>("life");
 
   const visible = useMemo(() => {
-    const sorted = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const sorted = sortEventsForDashboard(events, goals);
     if (filter === "life") return sorted;
     return sorted.filter((e) => e.category === filter || e.category === "both");
-  }, [events, filter]);
+  }, [events, goals, filter]);
+
+  const subtitle = useMemo(() => dashboardSubtitle(goals), [goals]);
 
   return (
     <div className="px-5 pt-6">
@@ -41,7 +46,7 @@ export default function HomePage() {
       <div className="mt-6 flex items-start justify-between">
         <div>
           <h2 className="text-xl font-semibold tracking-tight">Timeline</h2>
-          <p className="text-sm text-muted">Your life. Visualized.</p>
+          <p className="text-sm text-muted">{subtitle}</p>
         </div>
         <div className="flex items-center gap-2">
           <button aria-label="Filter options" className="flex h-8 w-8 items-center justify-center rounded-full card-surface">

@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { useLedger } from "@/lib/store";
+import { useOnboarding } from "@/lib/onboarding-store";
 import { COPILOT_PROMPTS, generateCopilotResponse, routeFreeTextPrompt, type CopilotPromptKey } from "@/lib/ai";
+import { sortCopilotPrompts } from "@/lib/personalization";
 import { AiSummaryCard } from "@/components/AiSummaryCard";
 
 export default function CopilotPage() {
   const { events } = useLedger();
+  const { goals } = useOnboarding();
+  const prompts = useMemo(() => sortCopilotPrompts(COPILOT_PROMPTS, goals), [goals]);
   const [active, setActive] = useState<CopilotPromptKey | null>(null);
   const [response, setResponse] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -30,7 +34,7 @@ export default function CopilotPage() {
     setInput("");
   }
 
-  const activePrompt = active ? COPILOT_PROMPTS.find((p) => p.key === active) : null;
+  const activePrompt = active ? prompts.find((p) => p.key === active) : null;
 
   return (
     <div className="flex h-full flex-col px-5 pt-6">
@@ -44,7 +48,7 @@ export default function CopilotPage() {
 
       <div className="flex-1 overflow-y-auto pb-28">
         <div className="mb-5 flex gap-2 overflow-x-auto whitespace-nowrap pb-1">
-          {COPILOT_PROMPTS.map((p) => (
+          {prompts.map((p) => (
             <button
               key={p.key}
               onClick={() => runPrompt(p.key)}

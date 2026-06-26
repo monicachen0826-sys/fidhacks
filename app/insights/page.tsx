@@ -3,6 +3,8 @@
 import { useMemo } from "react";
 import { Flame, Star, Zap, Briefcase } from "lucide-react";
 import { useLedger } from "@/lib/store";
+import { useOnboarding } from "@/lib/onboarding-store";
+import { defaultInsightsTab } from "@/lib/personalization";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -28,6 +30,8 @@ const SKILL_COLORS = [
 
 export default function InsightsPage() {
   const { events } = useLedger();
+  const { goals } = useOnboarding();
+  const initialTab = useMemo(() => defaultInsightsTab(goals), [goals]);
 
   const headerStats = useMemo(() => {
     const microWins = events.reduce((sum, e) => sum + e.subEvents.length, 0);
@@ -111,7 +115,7 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="skills">
+      <Tabs defaultValue={initialTab}>
         <TabsList className="mb-5">
           <TabsTrigger value="skills">Skills</TabsTrigger>
           <TabsTrigger value="growth">Growth</TabsTrigger>
