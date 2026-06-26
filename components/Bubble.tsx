@@ -9,7 +9,7 @@ const SIZE_MAP: Record<Significance, number> = {
   5: 136,
 };
 
-export type BubbleTone = "purple" | "blue" | "green" | "teal" | "pink" | "orange";
+export type BubbleTone = "purple" | "blue" | "green" | "teal" | "pink" | "orange" | "indigo" | "rose";
 
 const GRADIENT_MAP: Record<BubbleTone, string> = {
   purple: "gradient-bubble-purple bubble-glow-purple",
@@ -18,6 +18,8 @@ const GRADIENT_MAP: Record<BubbleTone, string> = {
   teal: "gradient-bubble-teal bubble-glow-teal",
   pink: "gradient-bubble-pink bubble-glow-pink",
   orange: "gradient-bubble-orange bubble-glow-orange",
+  indigo: "gradient-bubble-indigo bubble-glow-indigo",
+  rose: "gradient-bubble-rose bubble-glow-rose",
 };
 
 const CATEGORY_TONE: Record<Category, BubbleTone> = {

@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Pencil } from "lucide-react";
 import { Bubble, getBubbleTone, type BubbleTone } from "@/components/Bubble";
 import type { Event } from "@/lib/types";
 
-const SUB_TONES: BubbleTone[] = ["purple", "blue", "green", "teal", "orange"];
+const SUB_TONES: BubbleTone[] = ["blue", "rose", "green", "indigo", "orange", "teal", "pink", "purple"];
 
 export function RadialSubEvents({ event }: { event: Event }) {
+  const router = useRouter();
   const centerTone = getBubbleTone(event.category, event.id);
   const subs = event.subEvents;
   const radius = subs.length <= 2 ? 85 : subs.length <= 4 ? 100 : 110;
@@ -58,10 +61,26 @@ export function RadialSubEvents({ event }: { event: Event }) {
             className="absolute z-10 flex flex-col items-center"
             style={{ transform: `translate(${x}px, ${y}px)` }}
           >
-            <Bubble category={event.category} significance={2} tone={tone}>
-              <span className="text-[8px] font-bold">{sub.skillTags[0]?.slice(0, 3) ?? i + 1}</span>
-            </Bubble>
-            <span className="mt-1 max-w-[64px] truncate text-[9px] text-muted">{sub.title.split(" ")[0]}</span>
+            <div className="relative">
+              <Bubble category={event.category} significance={2} tone={tone}>
+                <span className="text-[8px] font-bold">{sub.skillTags[0]?.slice(0, 3) ?? i + 1}</span>
+              </Bubble>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  router.push(`/event/${event.id}/sub/${sub.id}/edit`);
+                }}
+                className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-foreground shadow-md ring-1 ring-black/10"
+                aria-label={`Edit ${sub.title}`}
+              >
+                <Pencil size={10} />
+              </button>
+            </div>
+            <span className="mt-1.5 max-w-[72px] truncate text-[10px] font-medium text-foreground/80">
+              {sub.title.split(" ")[0]}
+            </span>
           </Link>
         );
       })}

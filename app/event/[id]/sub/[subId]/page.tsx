@@ -30,7 +30,11 @@ export default function SubEventDetailPage() {
           <ChevronLeft size={22} />
         </button>
         <h1 className="text-[14px] font-semibold text-foreground">Microwin Detail</h1>
-        <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full text-muted">
+        <button
+          type="button"
+          onClick={() => router.push(`/event/${id}/sub/${subId}/edit`)}
+          className="flex h-9 w-9 items-center justify-center rounded-full text-muted"
+        >
           <Pencil size={18} />
         </button>
       </div>

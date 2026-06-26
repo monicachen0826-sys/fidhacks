@@ -13,6 +13,7 @@ interface LedgerContextValue {
   getSubEvent: (eventId: string, subId: string) => SubEvent | undefined;
   addEvent: (input: Omit<Event, "id" | "subEvents" | "aiSummary">) => Event;
   addSubEvent: (eventId: string, input: Omit<SubEvent, "id" | "parentEventId" | "aiSummary">) => SubEvent;
+  updateSubEvent: (eventId: string, subId: string, input: Omit<SubEvent, "id" | "parentEventId" | "aiSummary">) => void;
   setVisibility: (eventId: string, visibility: Event["visibility"]) => void;
   setSignificance: (eventId: string, significance: Event["significance"]) => void;
   ready: boolean;
@@ -78,6 +79,26 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
+  const updateSubEvent = useCallback(
+    (eventId: string, subId: string, input: Omit<SubEvent, "id" | "parentEventId" | "aiSummary">) => {
+      setEvents((prev) =>
+        prev.map((e) =>
+          e.id !== eventId
+            ? e
+            : {
+                ...e,
+                subEvents: e.subEvents.map((s) =>
+                  s.id === subId
+                    ? { ...s, ...input, aiSummary: generateSubEventSummary(input) }
+                    : s
+                ),
+              }
+        )
+      );
+    },
+    []
+  );
+
   const setVisibility = useCallback((eventId: string, visibility: Event["visibility"]) => {
     setEvents((prev) => prev.map((e) => (e.id === eventId ? { ...e, visibility } : e)));
   }, []);
@@ -87,8 +108,8 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ events, getEvent, getSubEvent, addEvent, addSubEvent, setVisibility, setSignificance, ready }),
-    [events, getEvent, getSubEvent, addEvent, addSubEvent, setVisibility, setSignificance, ready]
+    () => ({ events, getEvent, getSubEvent, addEvent, addSubEvent, updateSubEvent, setVisibility, setSignificance, ready }),
+    [events, getEvent, getSubEvent, addEvent, addSubEvent, updateSubEvent, setVisibility, setSignificance, ready]
   );
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>;

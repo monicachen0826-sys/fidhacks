@@ -62,85 +62,122 @@ body {
 
 .gradient-bubble-purple {
   background-image:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
     radial-gradient(circle at 70% 80%, rgba(109, 40, 217, 0.6) 0%, transparent 50%),
-    linear-gradient(145deg, #a78bfa 0%, #7c3aed 45%, #5b21b6 100%);
+    linear-gradient(145deg, #c4b5fd 0%, #8b5cf6 45%, #5b21b6 100%);
 }
 
 .gradient-bubble-blue {
   background-image:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
     radial-gradient(circle at 70% 80%, rgba(14, 165, 233, 0.5) 0%, transparent 50%),
-    linear-gradient(145deg, #67e8f9 0%, #38bdf8 45%, #0284c7 100%);
+    linear-gradient(145deg, #93e9fb 0%, #38bdf8 45%, #0369a1 100%);
 }
 
 .gradient-bubble-green {
   background-image:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
     radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.5) 0%, transparent 50%),
-    linear-gradient(145deg, #6ee7b7 0%, #34d399 45%, #059669 100%);
+    linear-gradient(145deg, #86efac 0%, #34d399 45%, #047857 100%);
 }
 
 .gradient-bubble-teal {
   background-image:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
     radial-gradient(circle at 70% 80%, rgba(13, 148, 136, 0.5) 0%, transparent 50%),
-    linear-gradient(145deg, #5eead4 0%, #2dd4bf 45%, #0f766e 100%);
+    linear-gradient(145deg, #99f6e4 0%, #2dd4bf 45%, #0f766e 100%);
 }
 
 .gradient-bubble-orange {
   background-image:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
     radial-gradient(circle at 70% 80%, rgba(249, 115, 22, 0.5) 0%, transparent 50%),
-    linear-gradient(145deg, #fdba74 0%, #f97316 45%, #c2410c 100%);
+    linear-gradient(145deg, #fed7aa 0%, #fb923c 45%, #c2410c 100%);
 }
 
 .gradient-bubble-pink {
   background-image:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
-    linear-gradient(145deg, #f9a8d4 0%, #ec4899 45%, #be185d 100%);
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
+    radial-gradient(circle at 70% 80%, rgba(219, 39, 119, 0.5) 0%, transparent 50%),
+    linear-gradient(145deg, #fbcfe8 0%, #f472b6 45%, #be185d 100%);
+}
+
+.gradient-bubble-indigo {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
+    radial-gradient(circle at 70% 80%, rgba(67, 56, 202, 0.55) 0%, transparent 50%),
+    linear-gradient(145deg, #a5b4fc 0%, #6366f1 45%, #3730a3 100%);
+}
+
+.gradient-bubble-rose {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, transparent 42%),
+    radial-gradient(circle at 70% 80%, rgba(190, 18, 60, 0.5) 0%, transparent 50%),
+    linear-gradient(145deg, #fda4af 0%, #fb7185 45%, #9f1239 100%);
 }
 
 .bubble-glow-purple {
   box-shadow:
-    0 0 40px rgba(124, 58, 237, 0.55),
-    0 0 80px rgba(124, 58, 237, 0.25),
-    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(124, 58, 237, 0.5),
+    0 8px 24px rgba(124, 58, 237, 0.3),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
 }
 
 .bubble-glow-blue {
   box-shadow:
-    0 0 40px rgba(56, 189, 248, 0.5),
-    0 0 80px rgba(56, 189, 248, 0.2),
-    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(56, 189, 248, 0.45),
+    0 8px 24px rgba(56, 189, 248, 0.25),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
 }
 
 .bubble-glow-green {
   box-shadow:
-    0 0 40px rgba(52, 211, 153, 0.5),
-    0 0 80px rgba(52, 211, 153, 0.2),
-    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(52, 211, 153, 0.45),
+    0 8px 24px rgba(52, 211, 153, 0.25),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
 }
 
 .bubble-glow-teal {
   box-shadow:
-    0 0 40px rgba(45, 212, 191, 0.5),
-    0 0 80px rgba(45, 212, 191, 0.2),
-    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(45, 212, 191, 0.45),
+    0 8px 24px rgba(45, 212, 191, 0.25),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
 }
 
 .bubble-glow-orange {
   box-shadow:
-    0 0 40px rgba(249, 115, 22, 0.5),
-    0 0 80px rgba(249, 115, 22, 0.2),
-    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(249, 115, 22, 0.45),
+    0 8px 24px rgba(249, 115, 22, 0.25),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
 }
 
 .bubble-glow-pink {
   box-shadow:
-    0 0 40px rgba(236, 72, 153, 0.5),
-    0 0 80px rgba(236, 72, 153, 0.2),
-    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(236, 72, 153, 0.45),
+    0 8px 24px rgba(236, 72, 153, 0.25),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.bubble-glow-indigo {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(99, 102, 241, 0.45),
+    0 8px 24px rgba(99, 102, 241, 0.25),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.bubble-glow-rose {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 36px rgba(251, 113, 133, 0.45),
+    0 8px 24px rgba(251, 113, 133, 0.25),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.22);
 }
 
 .card-surface {
