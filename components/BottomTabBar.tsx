@@ -2,43 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, BarChart3, Search, Sparkles, Plus } from "lucide-react";
+import { Home, LayoutGrid, Target, Box, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const LEFT_TABS = [
-  { href: "/", label: "Timeline", icon: Clock },
-  { href: "/insights", label: "Insights", icon: BarChart3 },
+const TABS = [
+  { href: "/", icon: Home, label: "Home" },
+  { href: "/insights", icon: LayoutGrid, label: "Insights" },
+  { href: "/search", icon: Target, label: "Search" },
+  { href: "/copilot", icon: Box, label: "Copilot" },
 ];
-
-const RIGHT_TABS = [
-  { href: "/search", label: "Search", icon: Search },
-  { href: "/copilot", label: "Copilot", icon: Sparkles },
-];
-
-function TabItem({
-  href,
-  label,
-  icon: Icon,
-  active,
-}: {
-  href: string;
-  label: string;
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
-  active: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "flex flex-1 flex-col items-center gap-0.5 py-1 text-[10px] font-medium transition-colors",
-        active ? "text-accent" : "text-muted"
-      )}
-    >
-      <Icon size={20} strokeWidth={active ? 2.25 : 2} />
-      {label}
-    </Link>
-  );
-}
 
 export default function BottomTabBar() {
   const pathname = usePathname();
@@ -47,27 +19,35 @@ export default function BottomTabBar() {
   if (isEventPage) return null;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40">
-      <div className="relative mx-auto max-w-md border-t border-border/60 bg-white pb-safe">
-        <div className="flex items-end px-2 pt-2 pb-3">
-          {LEFT_TABS.map((tab) => (
-            <TabItem key={tab.href} {...tab} active={pathname === tab.href} />
-          ))}
-
-          <div className="flex flex-1 flex-col items-center">
-            <Link
-              href="/event/new"
-              className="relative -top-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_28px_rgba(99,71,217,0.5)] transition-transform active:scale-95"
-            >
-              <Plus size={28} strokeWidth={2.5} />
-            </Link>
-          </div>
-
-          {RIGHT_TABS.map((tab) => (
-            <TabItem key={tab.href} {...tab} active={pathname === tab.href} />
-          ))}
+    <nav className="sticky bottom-0 z-40 shrink-0">
+      <div className="relative border-t border-white/10 bg-[#0a0a1a]/95 pb-safe backdrop-blur-xl">
+        <div className="flex items-center justify-around px-6 py-2.5">
+          {TABS.map(({ href, icon: Icon }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
+                  active ? "text-accent" : "text-muted"
+                )}
+                aria-label={href}
+              >
+                <Icon size={22} strokeWidth={active ? 2.25 : 1.75} />
+              </Link>
+            );
+          })}
         </div>
       </div>
+
+      <Link
+        href="/event/new"
+        className="absolute -top-5 right-5 flex h-12 w-12 items-center justify-center rounded-full gradient-accent text-white shadow-[0_8px_28px_rgba(124,58,237,0.55)] transition-transform active:scale-95"
+        aria-label="Add event"
+      >
+        <Plus size={24} strokeWidth={2.5} />
+      </Link>
     </nav>
   );
 }

@@ -6,24 +6,47 @@ export function SegmentedControl<T extends string>({
   options,
   value,
   onChange,
+  variant = "pill",
 }: {
   options: { value: T; label: string }[];
   value: T;
   onChange: (value: T) => void;
+  variant?: "pill" | "underline";
 }) {
+  if (variant === "underline") {
+    return (
+      <div className="flex gap-4 border-b border-white/10">
+        {options.map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={cn(
+              "pb-2.5 text-[13px] font-semibold transition-colors",
+              value === opt.value
+                ? "border-b-2 border-accent text-foreground"
+                : "text-muted"
+            )}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex overflow-hidden rounded-full border border-border/80 bg-white shadow-sm">
-      {options.map((opt, index) => (
+    <div className="flex gap-2 rounded-full glass-dark p-1">
+      {options.map((opt) => (
         <button
           key={opt.value}
           type="button"
           onClick={() => onChange(opt.value)}
           className={cn(
-            "flex-1 px-3 py-2.5 text-[13px] font-semibold transition-all",
-            index > 0 && "border-l border-border/60",
+            "flex-1 rounded-full px-3 py-2 text-[13px] font-semibold transition-all",
             value === opt.value
-              ? "bg-accent text-white"
-              : "text-foreground/70 hover:text-foreground"
+              ? "gradient-accent text-white shadow-[0_4px_16px_rgba(124,58,237,0.4)]"
+              : "text-muted hover:text-foreground"
           )}
         >
           {opt.label}

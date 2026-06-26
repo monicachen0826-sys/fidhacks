@@ -2,19 +2,20 @@ import { cn } from "@/lib/utils";
 import type { Category, Significance } from "@/lib/types";
 
 const SIZE_MAP: Record<Significance, number> = {
-  1: 72,
-  2: 88,
-  3: 104,
-  4: 120,
+  1: 68,
+  2: 84,
+  3: 100,
+  4: 118,
   5: 136,
 };
 
-type BubbleTone = "purple" | "blue" | "green" | "pink" | "orange";
+export type BubbleTone = "purple" | "blue" | "green" | "teal" | "pink" | "orange";
 
 const GRADIENT_MAP: Record<BubbleTone, string> = {
   purple: "gradient-bubble-purple bubble-glow-purple",
   blue: "gradient-bubble-blue bubble-glow-blue",
   green: "gradient-bubble-green bubble-glow-green",
+  teal: "gradient-bubble-teal bubble-glow-teal",
   pink: "gradient-bubble-pink bubble-glow-pink",
   orange: "gradient-bubble-orange bubble-glow-orange",
 };
@@ -22,10 +23,10 @@ const GRADIENT_MAP: Record<BubbleTone, string> = {
 const CATEGORY_TONE: Record<Category, BubbleTone> = {
   both: "purple",
   professional: "blue",
-  personal: "pink",
+  personal: "teal",
 };
 
-const PERSONAL_TONES: BubbleTone[] = ["pink", "green", "orange"];
+const PERSONAL_TONES: BubbleTone[] = ["teal", "green", "orange"];
 
 export function getBubbleTone(category: Category, eventId?: string): BubbleTone {
   if (category === "personal" && eventId) {
@@ -41,12 +42,14 @@ export function Bubble({
   children,
   className,
   tone,
+  style,
 }: {
   category: Category;
   significance: Significance;
   children?: React.ReactNode;
   className?: string;
   tone?: BubbleTone;
+  style?: React.CSSProperties;
 }) {
   const size = SIZE_MAP[significance];
   const bubbleTone = tone ?? CATEGORY_TONE[category];
@@ -58,9 +61,9 @@ export function Bubble({
         GRADIENT_MAP[bubbleTone],
         className
       )}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, ...style }}
     >
-      <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/20 to-transparent" />
+      <div className="pointer-events-none absolute inset-[8%] rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent" />
       {children}
     </div>
   );

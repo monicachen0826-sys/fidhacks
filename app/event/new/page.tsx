@@ -57,7 +57,7 @@ export default function NewEventPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Ran First Marathon"
-            className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+            className="w-full rounded-2xl glass-dark px-4 py-3 text-sm outline-none placeholder:text-muted focus:ring-2 focus:ring-accent/30"
           />
         </div>
 
@@ -82,7 +82,7 @@ export default function NewEventPage() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-accent"
+              className="w-full rounded-2xl glass-dark py-3 pl-11 pr-4 text-sm outline-none focus:ring-2 focus:ring-accent/30"
             />
           </div>
         </div>
@@ -110,7 +110,7 @@ export default function NewEventPage() {
 
         <div>
           <label className="mb-2 block text-xs font-semibold text-muted">Impact Level</label>
-          <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-sm">
+          <div className="flex items-center justify-between rounded-2xl glass-dark px-4 py-3">
             <span className="text-xs text-muted">1</span>
             <SignificanceDots value={significance} onChange={setSignificance} />
             <span className="text-xs text-muted">5</span>
@@ -121,14 +121,14 @@ export default function NewEventPage() {
           <label className="mb-1.5 block text-xs font-semibold text-muted">Evidence</label>
           <button
             type="button"
-            className="flex h-24 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-white text-sm text-muted"
+            className="flex h-24 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-white/10 glass-dark text-sm text-muted"
           >
             <Upload size={20} />
             Upload photo or document
           </button>
         </div>
 
-        <div className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between rounded-2xl glass-dark p-4">
           <div>
             <p className="text-sm font-bold">Show in Portfolio</p>
             <p className="text-xs text-muted">Visible on your shareable portfolio</p>

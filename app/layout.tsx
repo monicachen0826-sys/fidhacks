@@ -1,18 +1,19 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LedgerProvider } from "@/lib/store";
+import { PhoneFrame } from "@/components/PhoneFrame";
 import BottomTabBar from "@/components/BottomTabBar";
 
 export const metadata: Metadata = {
-  title: "My Ledger",
-  description: "Your life. Visualized.",
+  title: "My Multiverse",
+  description: "Your timeline across every dimension of life.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#f2f2f4",
+  themeColor: "#0a0a1a",
 };
 
 export default function RootLayout({
@@ -22,12 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="flex min-h-full flex-col bg-background text-foreground">
+      <body className="min-h-full text-foreground">
         <LedgerProvider>
-          <div className="mx-auto flex min-h-screen w-full max-w-md flex-col">
-            <main className="flex-1 pb-24">{children}</main>
-            <BottomTabBar />
-          </div>
+          <PhoneFrame>
+            <div className="relative flex min-h-full flex-col">
+              <main className="flex-1 pb-20">{children}</main>
+              <BottomTabBar />
+            </div>
+          </PhoneFrame>
         </LedgerProvider>
       </body>
     </html>

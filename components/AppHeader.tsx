@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function AppHeader({
-  title = "My Ledger",
+  title = "My Multiverse",
   showMenu = true,
   onMenuClick,
   right,
@@ -18,23 +18,23 @@ export function AppHeader({
   className?: string;
 }) {
   return (
-    <header className={cn("flex items-center justify-between px-4 pb-3 pt-4", className)}>
+    <header className={cn("flex items-center justify-between px-4 pb-2 pt-1", className)}>
       {showMenu ? (
         <button
           type="button"
           onClick={onMenuClick}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-foreground"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-foreground"
           aria-label="Menu"
         >
-          <Menu size={22} strokeWidth={2} />
+          <Menu size={20} strokeWidth={2} />
         </button>
       ) : (
-        <div className="h-10 w-10" />
+        <div className="h-9 w-9" />
       )}
-      <h1 className="text-[17px] font-bold tracking-tight">{title}</h1>
+      <h1 className="text-[15px] font-semibold tracking-wide text-foreground">{title}</h1>
       {right ?? (
-        <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#a78bfa] to-[#6347d9] text-xs font-semibold text-white shadow-md">
-          ML
+        <div className="h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-[#a78bfa] to-[#6d28d9] ring-2 ring-white/10">
+          <div className="flex h-full w-full items-center justify-center text-[10px] font-bold text-white">M</div>
         </div>
       )}
     </header>
@@ -53,17 +53,17 @@ export function FormHeader({
   title: string;
 }) {
   return (
-    <div className="flex items-center justify-between px-4 pb-4 pt-4">
-      <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-full text-foreground">
-        <X size={22} />
+    <div className="flex items-center justify-between px-4 pb-3 pt-1">
+      <button type="button" onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full text-foreground">
+        <X size={20} />
       </button>
-      <h1 className="text-[17px] font-bold">{title}</h1>
+      <h1 className="text-[15px] font-semibold">{title}</h1>
       <button
         type="button"
         onClick={onSave}
         disabled={!canSave}
         className={cn(
-          "flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold transition-colors",
+          "flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold",
           canSave ? "text-accent" : "text-muted"
         )}
         aria-label="Save"
@@ -74,13 +74,7 @@ export function FormHeader({
   );
 }
 
-export function SideMenu({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
 
   const links = [
@@ -93,21 +87,21 @@ export function SideMenu({
 
   return (
     <>
-      <button type="button" className="fixed inset-0 z-50 bg-black/30" onClick={onClose} aria-label="Close menu" />
-      <nav className="fixed left-0 top-0 z-50 flex h-full w-72 flex-col bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-border px-4 py-4">
-          <span className="text-lg font-bold">My Ledger</span>
-          <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full">
-            <X size={20} />
+      <button type="button" className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-label="Close menu" />
+      <nav className="fixed left-0 top-0 z-50 flex h-full w-64 flex-col border-r border-white/10 bg-[#141428] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-white/10 px-4 py-4">
+          <span className="serif-heading text-lg text-foreground">My Multiverse</span>
+          <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full text-muted">
+            <X size={18} />
           </button>
         </div>
-        <div className="flex flex-col gap-1 p-4">
+        <div className="flex flex-col gap-1 p-3">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className="rounded-xl px-4 py-3 text-[15px] font-medium transition-colors hover:bg-black/5"
+              className="rounded-xl px-4 py-3 text-[14px] font-medium text-foreground/90 transition-colors hover:bg-white/5"
             >
               {link.label}
             </Link>
