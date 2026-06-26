@@ -29,3 +29,43 @@ export interface Event {
 }
 
 export type TimelineFilter = "all" | "professional" | "personal" | "portfolio";
+
+export type AccentTheme = "purple" | "blue" | "teal";
+
+export interface ProjectSummary {
+  id: string;
+  title: string;
+  description: string;
+  link?: string;
+}
+
+export interface ProfilePreferences {
+  accentTheme: AccentTheme;
+  defaultTimelineFilter: TimelineFilter;
+  showFrequencyOnInsights: boolean;
+  compactTimeline: boolean;
+}
+
+export interface UserProfile {
+  name: string;
+  bio: string;
+  linkedinUrl: string;
+  githubUrl: string;
+  portfolioUrl: string;
+  websiteUrl: string;
+  projectSummaries: ProjectSummary[];
+  preferences: ProfilePreferences;
+}
+
+export interface DayActivity {
+  date: string;
+  count: number;
+}
+
+export interface TopicFrequency {
+  topic: string;
+  days: DayActivity[];
+  currentStreak: number;
+  longestStreak: number;
+  totalEntries: number;
+}

@@ -2,162 +2,129 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Star } from "lucide-react";
+import { ChevronLeft, Plus, MoreHorizontal, Star } from "lucide-react";
 import { useLedger } from "@/lib/store";
-import { OrbitCluster } from "@/components/OrbitCluster";
-import { ThemeCluster } from "@/components/ThemeCluster";
-import { SignificanceDots } from "@/components/SignificanceDots";
-import { AiSummaryCard } from "@/components/AiSummaryCard";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Bubble, getBubbleTone } from "@/components/Bubble";
+import { RadialSubEvents } from "@/components/RadialSubEvents";
+import { SegmentedControl } from "@/components/SegmentedControl";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+
+type DetailTab = "overview" | "microwins" | "notes";
 
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { getEvent, setVisibility, setSignificance } = useLedger();
+  const { getEvent } = useLedger();
   const event = getEvent(id);
+  const [tab, setTab] = useState<DetailTab>("overview");
 
   if (!event) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-3 px-5 pt-20 text-center">
         <p className="text-sm text-muted">This event couldn&apos;t be found.</p>
-        <Link href="/" className="text-sm font-medium text-[#4f7cff]">
-          Back to timeline
-        </Link>
+        <Link href="/" className="text-sm font-medium text-accent">Back to timeline</Link>
       </div>
     );
   }
 
+  const tabOptions = [
+    { value: "overview" as const, label: "Overview" },
+    { value: "microwins" as const, label: `Microwins (${event.subEvents.length})` },
+    { value: "notes" as const, label: "Notes" },
+  ];
+
   return (
-    <div className="px-5 pt-6">
-      <div className="mb-4 flex items-center justify-between">
-        <button onClick={() => router.back()} className="flex items-center gap-1 text-sm font-medium text-muted">
-          <ChevronLeft size={16} /> Back
+    <div className="min-h-full pb-6">
+      <div className="flex items-center justify-between px-4 pt-1">
+        <button type="button" onClick={() => router.back()} className="flex h-9 w-9 items-center justify-center rounded-full text-foreground">
+          <ChevronLeft size={22} />
         </button>
-        <button aria-label="More options" className="flex h-8 w-8 items-center justify-center rounded-full card-surface">
-          <MoreHorizontal size={16} />
+        <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full text-muted">
+          <MoreHorizontal size={20} />
         </button>
       </div>
 
-      <div className="flex flex-col items-center text-center">
-        <div className="mb-2 flex gap-0.5">
-          {[1, 2, 3, 4, 5].map((n) => (
-            <Star
-              key={n}
-              size={16}
-              className={n <= event.significance ? "fill-amber-400 text-amber-400" : "text-black/15"}
-            />
-          ))}
-        </div>
-        <h1 className="text-xl font-semibold tracking-tight">{event.title}</h1>
-        <p className="mt-1 text-sm text-muted">
+      <div className="px-4 text-center">
+        {event.significance >= 4 && (
+          <Star size={18} className="mx-auto mb-1 fill-[#fbbf24] text-[#fbbf24]" />
+        )}
+        <h1 className="serif-heading text-xl text-foreground">{event.title}</h1>
+        <p className="mt-1 text-xs text-muted">
           {new Date(event.date).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
         </p>
-        <div className="mt-3 flex flex-wrap justify-center gap-1.5">
-          {event.skills.map((s) => (
-            <Badge key={s}>{s}</Badge>
-          ))}
-        </div>
       </div>
 
-      <div className="card-surface mt-6 flex items-center justify-between p-4">
-        <div>
-          <p className="text-sm font-medium">Significance</p>
-          <p className="text-xs text-muted">How big was this moment?</p>
-        </div>
-        <SignificanceDots value={event.significance} onChange={(v) => setSignificance(event.id, v)} />
+      <div className="mt-5 px-4">
+        <SegmentedControl options={tabOptions} value={tab} onChange={setTab} variant="underline" />
       </div>
 
-      <div className="card-surface mt-3 flex items-center justify-between p-4">
-        <div>
-          <p className="text-sm font-medium">Show in Portfolio</p>
-          <p className="text-xs text-muted">Visible on your shareable portfolio</p>
-        </div>
-        <Switch
-          checked={event.visibility === "portfolio"}
-          onCheckedChange={(checked) => setVisibility(event.id, checked ? "portfolio" : "private")}
-        />
-      </div>
+      <div className="mt-5 px-4">
+        {tab === "overview" && (
+          <>
+            {event.subEvents.length > 0 ? (
+              <RadialSubEvents event={event} />
+            ) : (
+              <div className="flex justify-center py-8">
+                <Bubble category={event.category} significance={event.significance} tone={getBubbleTone(event.category, event.id)} />
+              </div>
+            )}
 
-      <Tabs defaultValue="overview" className="mt-6">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="microwins">Sub-events ({event.subEvents.length})</TabsTrigger>
-          <TabsTrigger value="notes">Notes</TabsTrigger>
-          <TabsTrigger value="ai-story">AI Story</TabsTrigger>
-        </TabsList>
+            <div className="card-surface mt-4 p-4">
+              <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-muted">About this event</h3>
+              <p className="text-[13px] leading-relaxed text-foreground/85">{event.description}</p>
+            </div>
+          </>
+        )}
 
-        <TabsContent value="overview" className="mt-4 space-y-4">
-          {event.subEvents.length > 0 && <ThemeCluster category={event.category} subEvents={event.subEvents} />}
+        {tab === "microwins" && (
+          <div className="space-y-3">
+            {event.subEvents.length === 0 ? (
+              <div className="card-surface p-6 text-center text-sm text-muted">No microwins yet.</div>
+            ) : (
+              event.subEvents.map((sub, i) => {
+                const tagClass = i % 3 === 0 ? "tag-wins" : i % 3 === 1 ? "tag-impact" : "tag-growth";
+                const tagLabel = i % 3 === 0 ? "Wins" : i % 3 === 1 ? "Impact" : "Growth";
 
+                return (
+                  <Link key={sub.id} href={`/event/${event.id}/sub/${sub.id}`} className="block">
+                    <div className="relative flex gap-3">
+                      <div className="relative w-12 shrink-0">
+                        <div className="timeline-axis absolute bottom-0 left-[18px] top-0 w-px" />
+                        <span className="text-[10px] text-muted">
+                          {new Date(sub.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                        </span>
+                      </div>
+                      <div className="card-surface mb-2 flex-1 p-3">
+                        <p className="text-[13px] font-semibold leading-snug">{sub.title}</p>
+                        <p className="mt-1 line-clamp-2 text-[11px] text-muted">{sub.description}</p>
+                        <span className={cn("mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold", tagClass)}>
+                          {tagLabel}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })
+            )}
+          </div>
+        )}
+
+        {tab === "notes" && (
           <div className="card-surface p-4">
-            <p className="text-sm font-medium">About this event</p>
-            <p className="mt-1 text-[14px] leading-relaxed text-foreground/90">{event.description}</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-muted">Notes</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-foreground/85">{event.description}</p>
           </div>
+        )}
 
-          <div className="flex items-center gap-2">
-            <Link
-              href={`/event/${event.id}/sub/new`}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-full gradient-accent px-4 py-3 text-sm font-semibold text-white"
-            >
-              <Plus size={16} /> Add Sub-event
-            </Link>
-            <Link
-              href={`/event/${event.id}/subevents`}
-              aria-label="View sub-events"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full card-surface"
-            >
-              <ChevronRight size={16} />
-            </Link>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="microwins" className="mt-4">
-          <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm font-medium text-muted">{event.subEvents.length} micro-wins</p>
-            <Link
-              href={`/event/${event.id}/sub/new`}
-              className="flex items-center gap-1 rounded-full bg-black/5 px-3 py-1.5 text-xs font-medium"
-            >
-              <Plus size={13} /> Add Sub-event
-            </Link>
-          </div>
-          {event.subEvents.length === 0 ? (
-            <div className="card-surface p-6 text-center text-sm text-muted">No micro-wins logged yet.</div>
-          ) : (
-            <>
-              <OrbitCluster
-                eventId={event.id}
-                category={event.category}
-                centerLabel={event.skills[0]?.slice(0, 2).toUpperCase() ?? event.title.slice(0, 2).toUpperCase()}
-                subEvents={event.subEvents}
-              />
-              <Link
-                href={`/event/${event.id}/subevents`}
-                className="mt-2 flex items-center justify-center gap-1 text-sm font-medium text-[#4f7cff]"
-              >
-                View all <ChevronRight size={14} />
-              </Link>
-            </>
-          )}
-        </TabsContent>
-
-        <TabsContent value="notes" className="mt-4">
-          <div className="card-surface p-4">
-            <p className="text-sm font-medium">What happened</p>
-            <p className="mt-1 text-[14px] leading-relaxed text-foreground/90">{event.description}</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="ai-story" className="mt-4">
-          {event.aiSummary ? (
-            <AiSummaryCard text={event.aiSummary} />
-          ) : (
-            <div className="card-surface p-6 text-center text-sm text-muted">No AI story generated yet.</div>
-          )}
-        </TabsContent>
-      </Tabs>
+        <Link
+          href={`/event/${event.id}/sub/new`}
+          className="mt-6 flex w-full items-center justify-center gap-2 rounded-full gradient-accent py-3.5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(124,58,237,0.45)]"
+        >
+          <Plus size={18} />
+          Add Microwin
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,75 @@
+*** Begin Patch
+*** Add File: app/page.tsx
+@@
++"use client";
++
++import { useMemo } from "react";
++import Link from "next/link";
++import {
++  ArrowRight,
++  BadgeCheck,
++  BarChart3,
++  CloudUpload,
++  Sparkles,
++  Target,
++  WandSparkles,
++} from "lucide-react";
++import { useLedger } from "@/lib/store";
++import { Badge } from "@/components/ui/badge";
++import BubbleShowcase from "@/components/BubbleShowcase";
++
++function Pill({ children }: { children: React.ReactNode }) {
++  return <div className="rounded-full border border-white/10 bg-white/75 px-3 py-1 text-xs font-medium text-foreground shadow-[0_8px_30px_rgba(94,75,179,0.08)] backdrop-blur">{children}</div>;
++}
++
++function MockCard({
++  title,
++  date,
++  tone,
++  accent,
++  labels,
++  content,
++}: {
++  title: string;
++  date: string;
++  tone: "violet" | "blue" | "pink" | "green" | "amber";
++  accent: string;
++  labels: string[];
++  content: React.ReactNode;
++}) {
++  const toneMap = {
++    violet: "from-[#8a5cf6] to-[#5a7dff]",
++    blue: "from-[#4f7cff] to-[#34c8e8]",
++    pink: "from-[#ff7a8a] to-[#ff9f5a]",
++    green: "from-[#34d399] to-[#22c1a4]",
++    amber: "from-[#f59e0b] to-[#f97316]",
++  } as const;
++
++  return (
++    <div className="rounded-[2rem] border border-white/70 bg-white/85 p-4 shadow-[0_24px_50px_rgba(74,61,146,0.14)] backdrop-blur-xl">
++      <div className="mb-4 flex items-center justify-between">
++        <div>
++          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted">{date}</p>
++          <h3 className="mt-1 text-[15px] font-semibold leading-tight">{title}</h3>
++        </div>
++        <div className={`h-11 w-11 rounded-2xl bg-gradient-to-br ${toneMap[tone]} shadow-[0_10px_30px_rgba(95,87,197,0.25)]`} />
++      </div>
++      <div className="mb-4 rounded-3xl border border-border/70 bg-gradient-to-br from-[#faf7ff] to-white p-4">
++        {content}
++      </div>
++      <div className="flex flex-wrap gap-1.5">
++        {labels.map((label) => (
++          <Badge key={label}>{label}</Badge>
++        ))}
++      </div>
++      <div className="mt-4 h-1.5 rounded-full bg-black/5">
++        <div className={`h-1.5 rounded-full bg-gradient-to-r ${accent}`} />
++      </div>
++    </div>
++  );
++}
++
++export default function HomePage() {
++  const { events } = useLedger();
+
+*** End Patch

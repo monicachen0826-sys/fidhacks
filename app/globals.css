@@ -1,19 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f5f7;
-  --surface: #ffffff;
-  --foreground: #1d1d1f;
-  --muted: #6e6e73;
-  --border: #e5e5ea;
-  --accent-from: #8a5cf6;
-  --accent-to: #4f7cff;
-  --professional-from: #4f7cff;
-  --professional-to: #34c8e8;
-  --personal-from: #ff7a8a;
-  --personal-to: #ff9f5a;
-  --portfolio-from: #34d399;
-  --portfolio-to: #22c1a4;
+  --background: #0a0a1a;
+  --surface: #141428;
+  --surface-elevated: #1c1c38;
+  --foreground: #f5f5f7;
+  --muted: #8b8ba8;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #7c3aed;
+  --accent-from: #8b5cf6;
+  --accent-to: #6d28d9;
+  --gold: #fbbf24;
+  --professional-from: #38bdf8;
+  --professional-to: #0ea5e9;
+  --personal-from: #34d399;
+  --personal-to: #10b981;
+  --teal-from: #2dd4bf;
+  --teal-to: #0d9488;
 }
 
 @theme inline {
@@ -22,14 +25,27 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-accent: var(--accent);
   --font-sans: var(--font-sf);
 }
 
 body {
-  background: var(--background);
+  background: #050510;
   color: var(--foreground);
   font-family: var(--font-sf), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+.stars-bg {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 80px 120px, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 160px 60px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 240px 180px, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 320px 90px, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(ellipse at 50% 0%, rgba(109, 40, 217, 0.15) 0%, transparent 55%);
+  background-size: 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 100% 100%;
 }
 
 .gradient-accent {
@@ -44,40 +60,194 @@ body {
   background-image: linear-gradient(135deg, var(--personal-from), var(--personal-to));
 }
 
-.gradient-portfolio {
-  background-image: linear-gradient(135deg, var(--portfolio-from), var(--portfolio-to));
+.gradient-bubble-purple {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(109, 40, 217, 0.6) 0%, transparent 50%),
+    linear-gradient(145deg, #a78bfa 0%, #7c3aed 45%, #5b21b6 100%);
 }
 
-.gradient-bubble-1 {
-  background-image: linear-gradient(135deg, #9b6dff, #7c4dff);
+.gradient-bubble-blue {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(14, 165, 233, 0.5) 0%, transparent 50%),
+    linear-gradient(145deg, #67e8f9 0%, #38bdf8 45%, #0284c7 100%);
 }
 
-.gradient-bubble-2 {
-  background-image: linear-gradient(135deg, #5a9dff, #3b7af0);
+.gradient-bubble-green {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.5) 0%, transparent 50%),
+    linear-gradient(145deg, #6ee7b7 0%, #34d399 45%, #059669 100%);
 }
 
-.gradient-bubble-3 {
-  background-image: linear-gradient(135deg, #4ad1a0, #34b88a);
+.gradient-bubble-teal {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(13, 148, 136, 0.5) 0%, transparent 50%),
+    linear-gradient(145deg, #5eead4 0%, #2dd4bf 45%, #0f766e 100%);
 }
 
-.gradient-bubble-4 {
-  background-image: linear-gradient(135deg, #ff7aa8, #f0568f);
+.gradient-bubble-orange {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(249, 115, 22, 0.5) 0%, transparent 50%),
+    linear-gradient(145deg, #fdba74 0%, #f97316 45%, #c2410c 100%);
 }
 
-.gradient-bubble-5 {
-  background-image: linear-gradient(135deg, #ffb24d, #ff9233);
+.gradient-bubble-pink {
+  background-image:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    linear-gradient(145deg, #f9a8d4 0%, #ec4899 45%, #be185d 100%);
 }
 
-.gradient-bubble-6 {
-  background-image: linear-gradient(135deg, #5ac8e0, #34a8c8);
+.bubble-glow-purple {
+  box-shadow:
+    0 0 40px rgba(124, 58, 237, 0.55),
+    0 0 80px rgba(124, 58, 237, 0.25),
+    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bubble-glow-blue {
+  box-shadow:
+    0 0 40px rgba(56, 189, 248, 0.5),
+    0 0 80px rgba(56, 189, 248, 0.2),
+    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bubble-glow-green {
+  box-shadow:
+    0 0 40px rgba(52, 211, 153, 0.5),
+    0 0 80px rgba(52, 211, 153, 0.2),
+    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bubble-glow-teal {
+  box-shadow:
+    0 0 40px rgba(45, 212, 191, 0.5),
+    0 0 80px rgba(45, 212, 191, 0.2),
+    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bubble-glow-orange {
+  box-shadow:
+    0 0 40px rgba(249, 115, 22, 0.5),
+    0 0 80px rgba(249, 115, 22, 0.2),
+    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bubble-glow-pink {
+  box-shadow:
+    0 0 40px rgba(236, 72, 153, 0.5),
+    0 0 80px rgba(236, 72, 153, 0.2),
+    inset 0 -8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card-surface {
-  background: var(--surface);
-  border-radius: 1.25rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -8px rgba(0, 0, 0, 0.08);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+
+.glass-dark {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timeline-axis {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.25) 1.5px, transparent 1.5px);
+  background-size: 4px 10px;
+  background-repeat: repeat-y;
+}
+
+.serif-heading {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* iPhone wireframe shell */
+.phone-shell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #050510 70%);
+}
+
+.phone-bezel {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  min-height: 844px;
+  border-radius: 44px;
+  border: 3px solid #3a3a3c;
+  box-shadow:
+    0 0 0 6px #1c1c1e,
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-island {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 60;
+  height: 28px;
+  width: 100px;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  background: #000;
+}
+
+.phone-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.phone-screen-inner {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (max-width: 430px) {
+  .phone-shell {
+    padding: 0;
+    background: var(--background);
+  }
+
+  .phone-bezel {
+    max-width: none;
+    min-height: 100dvh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .phone-island {
+    display: none;
+  }
 }
 
 ::-webkit-scrollbar {
   display: none;
 }
+
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.tag-wins { background: rgba(52, 211, 153, 0.15); color: #6ee7b7; }
+.tag-impact { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; }
+.tag-growth { background: rgba(167, 139, 250, 0.15); color: #c4b5fd; }
