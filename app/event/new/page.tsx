@@ -2,18 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ChevronLeft, Upload, Plus, X } from "lucide-react";
+import { Calendar, Upload } from "lucide-react";
 import { useLedger } from "@/lib/store";
+import { FormHeader } from "@/components/AppHeader";
 import { SegmentedControl } from "@/components/SegmentedControl";
-import { ImpactSlider } from "@/components/ImpactSlider";
-import { Field } from "@/components/ui/field";
-import { Input, Textarea } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { SignificanceDots } from "@/components/SignificanceDots";
+import { SkillTagInput } from "@/components/SkillTagInput";
 import { Switch } from "@/components/ui/switch";
 import type { Category, Significance, Visibility } from "@/lib/types";
 
-const DESCRIPTION_LIMIT = 500;
+const MAX_DESC = 500;
 
 export default function NewEventPage() {
   const router = useRouter();
@@ -25,21 +23,9 @@ export default function NewEventPage() {
   const [description, setDescription] = useState("");
   const [significance, setSignificance] = useState<Significance>(3);
   const [skills, setSkills] = useState<string[]>([]);
-  const [skillInput, setSkillInput] = useState("");
   const [visibility, setVisibility] = useState<Visibility>("private");
 
   const canSave = title.trim().length > 0 && description.trim().length > 0;
-
-  function addSkill() {
-    const trimmed = skillInput.trim();
-    if (!trimmed || skills.includes(trimmed)) return;
-    setSkills([...skills, trimmed]);
-    setSkillInput("");
-  }
-
-  function removeSkill(skill: string) {
-    setSkills(skills.filter((s) => s !== skill));
-  }
 
   function handleSave() {
     if (!canSave) return;
@@ -56,108 +42,103 @@ export default function NewEventPage() {
   }
 
   return (
-    <div className="px-5 pt-6">
-      <button onClick={() => router.back()} className="mb-4 flex items-center gap-1 text-sm font-medium text-muted">
-        <ChevronLeft size={16} /> Cancel
-      </button>
+    <div className="min-h-screen bg-background pb-8">
+      <FormHeader
+        title="Add New Event"
+        onClose={() => router.back()}
+        onSave={handleSave}
+        canSave={canSave}
+      />
 
-      <h1 className="mb-6 text-xl font-semibold tracking-tight">Add New Event</h1>
-
-      <Field label="Event title">
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Ran First Marathon" />
-      </Field>
-
-      <Field label="Category">
-        <SegmentedControl<Category>
-          options={[
-            { value: "professional", label: "Professional", selectedClassName: "bg-blue-500 text-white shadow-sm" },
-            { value: "personal", label: "Personal", selectedClassName: "bg-pink-500 text-white shadow-sm" },
-            { value: "both", label: "Both", selectedClassName: "bg-purple-500 text-white shadow-sm" },
-          ]}
-          value={category}
-          onChange={setCategory}
-        />
-      </Field>
-
-      <Field label="Date">
-        <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-      </Field>
-
-      <Field label="Description" hint="What happened?">
-        <Textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value.slice(0, DESCRIPTION_LIMIT))}
-          placeholder="Tell the story..."
-          maxLength={DESCRIPTION_LIMIT}
-        />
-        <p className="mt-1 text-right text-[11px] text-muted">
-          {description.length}/{DESCRIPTION_LIMIT}
-        </p>
-      </Field>
-
-      <Field label="Impact Level">
-        <ImpactSlider value={significance} onChange={setSignificance} />
-      </Field>
-
-      <Field label="Skills / tags" hint="Add one at a time">
-        <div className="flex gap-2">
-          <Input
-            value={skillInput}
-            onChange={(e) => setSkillInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addSkill();
-              }
-            }}
-            placeholder="e.g. Leadership"
+      <div className="space-y-5 px-4">
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-muted">Event Title</label>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g. Ran First Marathon"
+            className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
           />
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-muted">Category</label>
+          <SegmentedControl<Category>
+            options={[
+              { value: "professional", label: "Professional" },
+              { value: "personal", label: "Personal" },
+              { value: "both", label: "Both" },
+            ]}
+            value={category}
+            onChange={setCategory}
+          />
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-muted">Date</label>
+          <div className="relative">
+            <Calendar size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full rounded-2xl border border-border bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-accent"
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-1.5 flex items-center justify-between">
+            <label className="text-xs font-semibold text-muted">What happened?</label>
+            <span className="text-[11px] text-muted">
+              {description.length}/{MAX_DESC}
+            </span>
+          </div>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value.slice(0, MAX_DESC))}
+            placeholder="Tell the story..."
+            rows={4}
+            className="w-full resize-none rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-muted">Category / Skills</label>
+          <SkillTagInput tags={skills} onChange={setSkills} />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-xs font-semibold text-muted">Impact Level</label>
+          <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-sm">
+            <span className="text-xs text-muted">1</span>
+            <SignificanceDots value={significance} onChange={setSignificance} />
+            <span className="text-xs text-muted">5</span>
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-muted">Evidence</label>
           <button
             type="button"
-            onClick={addSkill}
-            aria-label="Add skill"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl gradient-accent text-white"
+            className="flex h-24 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-white text-sm text-muted"
           >
-            <Plus size={18} />
+            <Upload size={20} />
+            Upload photo or document
           </button>
         </div>
-        {skills.length > 0 && (
-          <div className="mt-2.5 flex flex-wrap gap-1.5">
-            {skills.map((s) => (
-              <Badge key={s} className="flex items-center gap-1 pr-1.5">
-                {s}
-                <button type="button" onClick={() => removeSkill(s)} aria-label={`Remove ${s}`}>
-                  <X size={11} />
-                </button>
-              </Badge>
-            ))}
+
+        <div className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
+          <div>
+            <p className="text-sm font-bold">Show in Portfolio</p>
+            <p className="text-xs text-muted">Visible on your shareable portfolio</p>
           </div>
-        )}
-      </Field>
-
-      <Field label="Evidence" hint="Optional — attach a link, photo, or document">
-        <button
-          type="button"
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm text-muted"
-        >
-          <Upload size={15} /> Upload evidence
-        </button>
-      </Field>
-
-      <div className="card-surface mb-6 flex items-center justify-between p-4">
-        <div>
-          <p className="text-sm font-medium">Show in Portfolio</p>
-          <p className="text-xs text-muted">Visible on your shareable portfolio</p>
+          <Switch
+            checked={visibility === "portfolio"}
+            onCheckedChange={(checked) => setVisibility(checked ? "portfolio" : "private")}
+          />
         </div>
-        <Switch
-          checked={visibility === "portfolio"}
-          onCheckedChange={(checked) => setVisibility(checked ? "portfolio" : "private")}
-        />
       </div>
-
-      <Button className="w-full" disabled={!canSave} onClick={handleSave}>
-        Save Event
-      </Button>
     </div>
   );
 }

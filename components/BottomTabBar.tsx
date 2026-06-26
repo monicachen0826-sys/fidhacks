@@ -2,79 +2,71 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, BarChart3, Sparkles, Search, Plus } from "lucide-react";
+import { Clock, BarChart3, Search, Sparkles, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const TABS = [
+const LEFT_TABS = [
   { href: "/", label: "Timeline", icon: Clock },
   { href: "/insights", label: "Insights", icon: BarChart3 },
+];
+
+const RIGHT_TABS = [
   { href: "/search", label: "Search", icon: Search },
   { href: "/copilot", label: "Copilot", icon: Sparkles },
 ];
 
+function TabItem({
+  href,
+  label,
+  icon: Icon,
+  active,
+}: {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
+  active: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "flex flex-1 flex-col items-center gap-0.5 py-1 text-[10px] font-medium transition-colors",
+        active ? "text-accent" : "text-muted"
+      )}
+    >
+      <Icon size={20} strokeWidth={active ? 2.25 : 2} />
+      {label}
+    </Link>
+  );
+}
+
 export default function BottomTabBar() {
   const pathname = usePathname();
+  const isEventPage = pathname.startsWith("/event");
+
+  if (isEventPage) return null;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-center pb-5 px-4">
-      <div className="relative mx-auto flex w-full max-w-sm items-center justify-between rounded-full border border-border bg-surface/90 px-2 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl">
-        {TABS.slice(0, 2).map(({ href, label, icon: Icon }) => {
-          const active = pathname === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "flex flex-1 flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-medium transition-colors",
-                active ? "text-foreground" : "text-muted"
-              )}
-            >
-              <div
-                className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full transition-all",
-                  active && "gradient-accent text-white shadow-sm"
-                )}
-              >
-                <Icon size={16} strokeWidth={2.25} />
-              </div>
-              {label}
-            </Link>
-          );
-        })}
+    <nav className="fixed inset-x-0 bottom-0 z-40">
+      <div className="relative mx-auto max-w-md border-t border-border/60 bg-white pb-safe">
+        <div className="flex items-end px-2 pt-2 pb-3">
+          {LEFT_TABS.map((tab) => (
+            <TabItem key={tab.href} {...tab} active={pathname === tab.href} />
+          ))}
 
-        <div className="flex flex-1 flex-col items-center">
-          <Link
-            href="/event/new"
-            aria-label="Add new event"
-            className="flex h-14 w-14 -translate-y-5 items-center justify-center rounded-full gradient-accent text-white shadow-[0_10px_30px_rgba(80,80,255,0.4)] ring-4 ring-background active:scale-95"
-          >
-            <Plus size={24} strokeWidth={2.5} />
-          </Link>
+          <div className="flex flex-1 flex-col items-center">
+            <Link
+              href="/event/new"
+              className="relative -top-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_28px_rgba(99,71,217,0.5)] transition-transform active:scale-95"
+            >
+              <Plus size={28} strokeWidth={2.5} />
+            </Link>
+          </div>
+
+          {RIGHT_TABS.map((tab) => (
+            <TabItem key={tab.href} {...tab} active={pathname === tab.href} />
+          ))}
         </div>
-
-        {TABS.slice(2).map(({ href, label, icon: Icon }) => {
-          const active = pathname === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "flex flex-1 flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-medium transition-colors",
-                active ? "text-foreground" : "text-muted"
-              )}
-            >
-              <div
-                className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full transition-all",
-                  active && "gradient-accent text-white shadow-sm"
-                )}
-              >
-                <Icon size={16} strokeWidth={2.25} />
-              </div>
-              {label}
-            </Link>
-          );
-        })}
       </div>
     </nav>
   );
