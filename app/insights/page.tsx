@@ -1,13 +1,21 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Flame, Star, Zap, Briefcase } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { useOnboarding } from "@/lib/onboarding-store";
 import { defaultInsightsTab } from "@/lib/personalization";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { SegmentedControl } from "@/components/SegmentedControl";
+
+type InsightsTab = "skills" | "growth" | "trends";
+
+const TABS: { value: InsightsTab; label: string }[] = [
+  { value: "skills", label: "Skills" },
+  { value: "growth", label: "Growth" },
+  { value: "trends", label: "Trends" },
+];
 
 function monthKey(date: string) {
   return date.slice(0, 7);
@@ -32,6 +40,7 @@ export default function InsightsPage() {
   const { events } = useLedger();
   const { goals } = useOnboarding();
   const initialTab = useMemo(() => defaultInsightsTab(goals), [goals]);
+  const [tab, setTab] = useState<InsightsTab>(initialTab);
 
   const headerStats = useMemo(() => {
     const microWins = events.reduce((sum, e) => sum + e.subEvents.length, 0);
@@ -115,14 +124,12 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      <Tabs defaultValue={initialTab}>
-        <TabsList className="mb-5">
-          <TabsTrigger value="skills">Skills</TabsTrigger>
-          <TabsTrigger value="growth">Growth</TabsTrigger>
-          <TabsTrigger value="trends">Trends</TabsTrigger>
-        </TabsList>
+      <div className="mb-5">
+        <SegmentedControl options={TABS} value={tab} onChange={setTab} pill />
+      </div>
 
-        <TabsContent value="skills">
+      {tab === "skills" && (
+        <div>
           <Card>
             <h2 className="text-sm font-semibold">Skill Growth</h2>
             <p className="mb-3 text-xs text-muted">See how your skills have grown over time.</p>
@@ -146,10 +153,15 @@ export default function InsightsPage() {
               })}
               {stats.topSkills.length === 0 && <p className="text-sm text-muted">Log events to see your top skills.</p>}
             </div>
+            {stats.topSkills.length > 0 && (
+              <button className="mt-3 text-xs font-medium text-[#8a5cf6]">View All Skills</button>
+            )}
           </Card>
-        </TabsContent>
+        </div>
+      )}
 
-        <TabsContent value="growth">
+      {tab === "growth" && (
+        <div>
           <Card className="mb-4 flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-full gradient-accent text-white">
               <Flame size={20} />
@@ -176,9 +188,11 @@ export default function InsightsPage() {
               ))}
             </div>
           </Card>
-        </TabsContent>
+        </div>
+      )}
 
-        <TabsContent value="trends">
+      {tab === "trends" && (
+        <div>
           <Card className="mb-4">
             <h2 className="mb-3 text-sm font-semibold">Monthly Activity</h2>
             <div className="flex items-end justify-between gap-2 h-28">
@@ -207,8 +221,8 @@ export default function InsightsPage() {
               )}
             </div>
           </Card>
-        </TabsContent>
-      </Tabs>
+        </div>
+      )}
     </div>
   );
 }

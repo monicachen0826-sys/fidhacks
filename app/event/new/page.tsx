@@ -95,7 +95,7 @@ export default function NewEventPage() {
         </p>
       </Field>
 
-      <Field label="Significance level">
+      <Field label="Impact Level">
         <ImpactSlider value={significance} onChange={setSignificance} />
       </Field>
 

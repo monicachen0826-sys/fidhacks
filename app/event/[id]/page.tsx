@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Plus, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Star } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { OrbitCluster } from "@/components/OrbitCluster";
 import { ThemeCluster } from "@/components/ThemeCluster";
@@ -31,15 +31,25 @@ export default function EventDetailPage() {
 
   return (
     <div className="px-5 pt-6">
-      <button
-        onClick={() => router.back()}
-        className="mb-4 flex items-center gap-1 text-sm font-medium text-muted"
-      >
-        <ChevronLeft size={16} /> Back
-      </button>
+      <div className="mb-4 flex items-center justify-between">
+        <button onClick={() => router.back()} className="flex items-center gap-1 text-sm font-medium text-muted">
+          <ChevronLeft size={16} /> Back
+        </button>
+        <button aria-label="More options" className="flex h-8 w-8 items-center justify-center rounded-full card-surface">
+          <MoreHorizontal size={16} />
+        </button>
+      </div>
 
       <div className="flex flex-col items-center text-center">
-        {event.significance >= 4 && <Star size={20} className="mb-2 fill-amber-400 text-amber-400" />}
+        <div className="mb-2 flex gap-0.5">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <Star
+              key={n}
+              size={16}
+              className={n <= event.significance ? "fill-amber-400 text-amber-400" : "text-black/15"}
+            />
+          ))}
+        </div>
         <h1 className="text-xl font-semibold tracking-tight">{event.title}</h1>
         <p className="mt-1 text-sm text-muted">
           {new Date(event.date).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
@@ -73,8 +83,9 @@ export default function EventDetailPage() {
       <Tabs defaultValue="overview" className="mt-6">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="microwins">Microwins ({event.subEvents.length})</TabsTrigger>
+          <TabsTrigger value="microwins">Sub-events ({event.subEvents.length})</TabsTrigger>
           <TabsTrigger value="notes">Notes</TabsTrigger>
+          <TabsTrigger value="ai-story">AI Story</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4 space-y-4">
@@ -85,14 +96,21 @@ export default function EventDetailPage() {
             <p className="mt-1 text-[14px] leading-relaxed text-foreground/90">{event.description}</p>
           </div>
 
-          {event.aiSummary && <AiSummaryCard text={event.aiSummary} />}
-
-          <Link
-            href={`/event/${event.id}/sub/new`}
-            className="flex w-full items-center justify-center gap-1.5 rounded-full gradient-accent px-4 py-3 text-sm font-semibold text-white"
-          >
-            <Plus size={16} /> Add Microwin
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/event/${event.id}/sub/new`}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full gradient-accent px-4 py-3 text-sm font-semibold text-white"
+            >
+              <Plus size={16} /> Add Sub-event
+            </Link>
+            <Link
+              href={`/event/${event.id}/subevents`}
+              aria-label="View sub-events"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full card-surface"
+            >
+              <ChevronRight size={16} />
+            </Link>
+          </div>
         </TabsContent>
 
         <TabsContent value="microwins" className="mt-4">
@@ -102,7 +120,7 @@ export default function EventDetailPage() {
               href={`/event/${event.id}/sub/new`}
               className="flex items-center gap-1 rounded-full bg-black/5 px-3 py-1.5 text-xs font-medium"
             >
-              <Plus size={13} /> Add Microwin
+              <Plus size={13} /> Add Sub-event
             </Link>
           </div>
           {event.subEvents.length === 0 ? (
@@ -130,6 +148,14 @@ export default function EventDetailPage() {
             <p className="text-sm font-medium">What happened</p>
             <p className="mt-1 text-[14px] leading-relaxed text-foreground/90">{event.description}</p>
           </div>
+        </TabsContent>
+
+        <TabsContent value="ai-story" className="mt-4">
+          {event.aiSummary ? (
+            <AiSummaryCard text={event.aiSummary} />
+          ) : (
+            <div className="card-surface p-6 text-center text-sm text-muted">No AI story generated yet.</div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

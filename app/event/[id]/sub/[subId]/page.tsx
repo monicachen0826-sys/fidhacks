@@ -82,15 +82,23 @@ export default function SubEventDetailPage() {
       {sub.evidenceUrl && (
         <div className="card-surface mt-3 p-4">
           <p className="text-sm font-medium">Evidence</p>
-          <a href={sub.evidenceUrl} className="mt-2 flex h-28 items-center justify-center gap-2 rounded-xl gradient-accent text-white">
-            <ImageIcon size={20} />
-            <span className="text-xs font-medium">View attachment</span>
+          <a href={sub.evidenceUrl} className="mt-2 flex items-center gap-3 rounded-xl bg-black/5 p-2.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg gradient-accent text-white">
+              <ImageIcon size={18} />
+            </div>
+            <span className="truncate text-[13px] font-medium">{sub.evidenceUrl.split("/").pop()}</span>
           </a>
         </div>
       )}
 
       {sub.aiSummary && (
         <div className="mt-3">
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <p className="text-sm font-medium">Copilot Summary</p>
+            <span className="rounded-full bg-[#8a5cf6]/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[#8a5cf6]">
+              Beta
+            </span>
+          </div>
           <AiSummaryCard text={sub.aiSummary} />
         </div>
       )}

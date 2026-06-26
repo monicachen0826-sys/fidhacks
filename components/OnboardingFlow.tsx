@@ -26,7 +26,7 @@ export function OnboardingFlow() {
           <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full gradient-accent text-white">
             <Sparkles size={24} />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">Welcome to My Ledger</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Welcome to Probble</h1>
           <p className="mt-2 text-sm text-muted">
             A quick survey to help us understand what counts as a win for you. It takes less than a minute.
           </p>

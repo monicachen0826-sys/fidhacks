@@ -7,7 +7,7 @@ import { IPhoneFrame } from "@/components/IPhoneFrame";
 import BottomTabBar from "@/components/BottomTabBar";
 
 export const metadata: Metadata = {
-  title: "My Ledger",
+  title: "Probble",
   description: "Your life. Visualized.",
 };
 

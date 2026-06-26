@@ -35,7 +35,7 @@ export default function HomePage() {
         <button aria-label="Menu" className="flex h-9 w-9 items-center justify-center rounded-full">
           <Menu size={22} />
         </button>
-        <h1 className="text-lg font-semibold tracking-tight">My Ledger</h1>
+        <h1 className="text-lg font-semibold tracking-tight">Probble</h1>
         <div className="h-9 w-9 overflow-hidden rounded-full bg-black/10" />
       </div>
 

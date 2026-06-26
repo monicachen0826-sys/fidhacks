@@ -2,11 +2,20 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Calendar, CheckCircle2, GraduationCap, MapPin, Plus, Users, Wallet } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { SignificanceDots } from "@/components/SignificanceDots";
-import { Bubble } from "@/components/Bubble";
+
+const SUB_ICONS = [CheckCircle2, Calendar, Users, GraduationCap, Wallet, MapPin];
+const BUBBLE_GRADIENTS = [
+  "gradient-bubble-1",
+  "gradient-bubble-2",
+  "gradient-bubble-3",
+  "gradient-bubble-4",
+  "gradient-bubble-5",
+  "gradient-bubble-6",
+];
 
 export default function SubEventsListPage() {
   const { id } = useParams<{ id: string }>();
@@ -45,11 +54,13 @@ export default function SubEventsListPage() {
         <div className="card-surface p-6 text-center text-sm text-muted">No micro-wins logged yet.</div>
       ) : (
         <div className="space-y-2.5">
-          {event.subEvents.map((sub) => (
+          {event.subEvents.map((sub, i) => {
+            const Icon = SUB_ICONS[i % SUB_ICONS.length];
+            return (
             <Link key={sub.id} href={`/event/${event.id}/sub/${sub.id}`} className="card-surface flex items-center gap-3 p-3">
-              <Bubble category={event.category} significance={sub.significance} className="h-11 w-11 text-[10px] font-semibold shrink-0">
-                {sub.skillTags[0]?.slice(0, 2).toUpperCase() ?? sub.title.slice(0, 2).toUpperCase()}
-              </Bubble>
+              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white ${BUBBLE_GRADIENTS[i % BUBBLE_GRADIENTS.length]}`}>
+                <Icon size={18} />
+              </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[14px] font-medium leading-tight">{sub.title}</p>
                 <p className="truncate text-xs text-muted">
@@ -61,7 +72,8 @@ export default function SubEventsListPage() {
                 <SignificanceDots value={sub.significance} />
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

@@ -8,6 +8,15 @@ import { COPILOT_PROMPTS, generateCopilotResponse, routeFreeTextPrompt, type Cop
 import { sortCopilotPrompts } from "@/lib/personalization";
 import { AiSummaryCard } from "@/components/AiSummaryCard";
 
+const BUBBLE_GRADIENTS = [
+  "gradient-bubble-1",
+  "gradient-bubble-2",
+  "gradient-bubble-3",
+  "gradient-bubble-4",
+  "gradient-bubble-5",
+  "gradient-bubble-6",
+];
+
 export default function CopilotPage() {
   const { events } = useLedger();
   const { goals } = useOnboarding();
@@ -47,17 +56,22 @@ export default function CopilotPage() {
       </header>
 
       <div className="flex-1 overflow-y-auto pb-28">
-        <div className="mb-5 flex gap-2 overflow-x-auto whitespace-nowrap pb-1">
-          {prompts.map((p) => (
+        <div className="mb-5 flex flex-col gap-2.5">
+          {prompts.map((p, i) => (
             <button
               key={p.key}
               onClick={() => runPrompt(p.key)}
-              className={`card-surface flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-left transition-all active:scale-[0.98] ${
+              className={`card-surface flex w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all active:scale-[0.98] ${
                 active === p.key ? "ring-2 ring-[#8a5cf6]/40" : ""
               }`}
             >
-              <span className="text-sm">{p.emoji}</span>
-              <span className="text-[13px] font-medium">{p.label}</span>
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lg ${BUBBLE_GRADIENTS[i % BUBBLE_GRADIENTS.length]}`}>
+                {p.emoji}
+              </div>
+              <div className="min-w-0">
+                <p className="text-[14px] font-medium leading-tight">{p.label}</p>
+                <p className="mt-0.5 truncate text-xs text-muted">{p.description}</p>
+              </div>
             </button>
           ))}
         </div>

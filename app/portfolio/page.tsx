@@ -56,10 +56,7 @@ export default function PortfolioPage() {
           <p className="text-xs font-medium uppercase tracking-wide text-muted">Shareable</p>
           <h1 className="mt-1 text-[26px] font-semibold tracking-tight">Portfolio</h1>
         </div>
-        <Button size="sm" variant="secondary" onClick={handleShare} className="mt-1">
-          {copied ? <Check size={14} /> : <Share2 size={14} />}
-          {copied ? "Copied" : "Share"}
-        </Button>
+        <button className="mt-1 text-sm font-medium text-[#4f7cff]">Preview</button>
       </header>
 
       {portfolioEvents.length === 0 ? (
@@ -168,6 +165,13 @@ export default function PortfolioPage() {
             </div>
           </TabsContent>
         </Tabs>
+      )}
+
+      {portfolioEvents.length > 0 && (
+        <Button className="mt-6 w-full" onClick={handleShare}>
+          {copied ? <Check size={16} /> : <Share2 size={16} />}
+          {copied ? "Copied!" : "Share Portfolio"}
+        </Button>
       )}
     </div>
   );
