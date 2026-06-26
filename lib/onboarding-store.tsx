@@ -17,6 +17,7 @@ interface OnboardingContextValue extends OnboardingState {
   toggleChecklistItem: (id: string) => void;
   setGoalValue: (id: string, value: number) => void;
   complete: () => void;
+  reset: () => void;
 }
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
@@ -53,9 +54,13 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     setState((prev) => ({ ...prev, completed: true }));
   }, []);
 
+  const reset = useCallback(() => {
+    setState(DEFAULT_STATE);
+  }, []);
+
   const value = useMemo(
-    () => ({ ...state, ready, toggleChecklistItem, setGoalValue, complete }),
-    [state, ready, toggleChecklistItem, setGoalValue, complete]
+    () => ({ ...state, ready, toggleChecklistItem, setGoalValue, complete, reset }),
+    [state, ready, toggleChecklistItem, setGoalValue, complete, reset]
   );
 
   return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;

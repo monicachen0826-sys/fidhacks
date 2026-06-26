@@ -10,22 +10,23 @@ export function AppHeader({
   onMenuClick,
   right,
   className,
+  profileName,
 }: {
   title?: string;
   showMenu?: boolean;
   onMenuClick?: () => void;
   right?: React.ReactNode;
   className?: string;
+  profileName?: string;
 }) {
+  const initials = profileName
+    ? profileName.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()
+    : "M";
+
   return (
     <header className={cn("flex items-center justify-between px-4 pb-2 pt-1", className)}>
       {showMenu ? (
-        <button
-          type="button"
-          onClick={onMenuClick}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-foreground"
-          aria-label="Menu"
-        >
+        <button type="button" onClick={onMenuClick} className="flex h-9 w-9 items-center justify-center rounded-full text-foreground" aria-label="Menu">
           <Menu size={20} strokeWidth={2} />
         </button>
       ) : (
@@ -33,9 +34,9 @@ export function AppHeader({
       )}
       <h1 className="text-[15px] font-semibold tracking-wide text-foreground">{title}</h1>
       {right ?? (
-        <div className="h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-[#a78bfa] to-[#6d28d9] ring-2 ring-white/10">
-          <div className="flex h-full w-full items-center justify-center text-[10px] font-bold text-white">M</div>
-        </div>
+        <Link href="/profile" className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#a78bfa] to-[#6d28d9] text-[10px] font-bold text-white ring-2 ring-white/10">
+          {initials}
+        </Link>
       )}
     </header>
   );
@@ -79,6 +80,7 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
 
   const links = [
     { href: "/", label: "Timeline" },
+    { href: "/profile", label: "Profile" },
     { href: "/insights", label: "Insights" },
     { href: "/portfolio", label: "Portfolio" },
     { href: "/search", label: "Search" },

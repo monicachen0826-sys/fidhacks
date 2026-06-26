@@ -1,5 +1,6 @@
-import type { Event } from "@/lib/types";
+import type { Event, TimelineFilter } from "@/lib/types";
 import type { CopilotPromptKey } from "@/lib/ai";
+import type { ProfilePreferences } from "@/lib/types";
 
 export interface Goals {
   [id: string]: number;
@@ -10,6 +11,19 @@ function lean(goals: Goals, id: string, threshold = 55) {
   if (value >= threshold) return "right" as const;
   if (value <= 100 - threshold) return "left" as const;
   return "neutral" as const;
+}
+
+export function applyGoalsToPreferences(goals: Goals): Partial<ProfilePreferences> {
+  const showcaseLean = lean(goals, "growth-vs-showcase");
+  const collectLean = lean(goals, "collect-vs-polish");
+  const shortLean = lean(goals, "short-vs-long");
+
+  return {
+    showFrequencyOnInsights: lean(goals, "growth-vs-showcase", 50) !== "right",
+    compactTimeline: collectLean === "right",
+    defaultTimelineFilter:
+      showcaseLean === "right" ? "professional" : collectLean === "left" ? "all" : "all",
+  };
 }
 
 export function sortEventsForDashboard(events: Event[], goals: Goals): Event[] {
@@ -40,13 +54,38 @@ export function dashboardSubtitle(goals: Goals): string {
   return "Your life. Visualized.";
 }
 
-export function defaultInsightsTab(goals: Goals): "skills" | "growth" | "trends" {
+export function defaultInsightsTab(goals: Goals): "skills" | "growth" | "trends" | "frequency" {
   const showcaseLean = lean(goals, "growth-vs-showcase");
   const reflectLean = lean(goals, "reflect-vs-next");
+  const growthLean = lean(goals, "growth-vs-showcase", 50);
 
+  if (growthLean === "left") return "frequency";
   if (showcaseLean === "right") return "skills";
   if (reflectLean === "right") return "trends";
   return "growth";
+}
+
+export function defaultEventTab(goals: Goals): "overview" | "microwins" | "notes" {
+  const detailsLean = lean(goals, "details-vs-summaries");
+  return detailsLean === "left" ? "microwins" : "overview";
+}
+
+export function suggestedPromptsFromChecklist(checklist: Record<string, boolean>): string[] {
+  const map: Record<string, string> = {
+    "made-something": "Log a project you built for class or work",
+    "taught-someone": "Capture a time you taught someone something",
+    "fixed-mess": "Add a moment you fixed a messy process or plan",
+    "applied-somewhere": "Log an application — even if you didn't get it",
+    "positive-feedback": "Save positive feedback you received",
+    "learned-tool": "Record a tool you learned out of necessity",
+    "ran-event": "Add an event, meeting, or activity you helped run",
+    "handled-responsibility": "Log responsibility you handled at home, work, or school",
+    "made-from-curiosity": "Capture something you made just because you were curious",
+  };
+  return Object.entries(checklist)
+    .filter(([, checked]) => checked)
+    .map(([id]) => map[id])
+    .filter(Boolean);
 }
 
 const COPILOT_PRIORITY: Record<CopilotPromptKey, { reflect: number; next: number }> = {

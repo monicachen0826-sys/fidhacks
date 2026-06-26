@@ -1,17 +1,25 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Flame, TrendingUp } from "lucide-react";
+import { Flame, TrendingUp, Activity } from "lucide-react";
 import { useLedger } from "@/lib/store";
+import { useOnboarding } from "@/lib/onboarding-store";
+import { useProfile } from "@/lib/profile-store";
+import { defaultInsightsTab } from "@/lib/personalization";
+import { getAllTopics, getTopicFrequency, getTopTopicFrequencies } from "@/lib/frequency";
 import { AppHeader } from "@/components/AppHeader";
 import { SegmentedControl } from "@/components/SegmentedControl";
+import { FrequencyGrid } from "@/components/FrequencyGrid";
 
-type InsightTab = "skills" | "growth" | "trends";
+type InsightTab = "skills" | "growth" | "trends" | "frequency";
 const SKILL_COLORS = ["#7c3aed", "#38bdf8", "#2dd4bf", "#34d399", "#f97316", "#ec4899"];
 
 export default function InsightsPage() {
   const { events } = useLedger();
-  const [tab, setTab] = useState<InsightTab>("skills");
+  const { goals } = useOnboarding();
+  const { profile } = useProfile();
+  const [tab, setTab] = useState<InsightTab>(defaultInsightsTab(goals));
+  const [selectedTopic, setSelectedTopic] = useState<string>("");
 
   const stats = useMemo(() => {
     const skillCounts = new Map<string, number>();
@@ -33,13 +41,22 @@ export default function InsightsPage() {
       cursor.setMonth(cursor.getMonth() - 1);
     }
     const themes = [...new Set(events.flatMap((e) => e.skills))].slice(0, 8);
-    return { topSkills, maxSkillCount, streak, themes };
+    const topics = getAllTopics(events);
+    const topFreq = getTopTopicFrequencies(events, 4);
+    return { topSkills, maxSkillCount, streak, themes, topics, topFreq };
   }, [events]);
+
+  const activeTopic = selectedTopic || stats.topics[0] || "";
+  const topicFreq = useMemo(
+    () => (activeTopic ? getTopicFrequency(events, activeTopic) : null),
+    [events, activeTopic]
+  );
 
   const tabOptions = [
     { value: "skills" as const, label: "Skills" },
     { value: "growth" as const, label: "Growth" },
     { value: "trends" as const, label: "Trends" },
+    ...(profile.preferences.showFrequencyOnInsights ? [{ value: "frequency" as const, label: "Frequency" }] : []),
   ];
 
   return (
@@ -96,6 +113,61 @@ export default function InsightsPage() {
                 ))}
               </div>
             </div>
+          )}
+
+          {tab === "frequency" && profile.preferences.showFrequencyOnInsights && (
+            <>
+              {stats.topFreq.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {stats.topFreq.map((f) => (
+                    <button
+                      key={f.topic}
+                      type="button"
+                      onClick={() => { setSelectedTopic(f.topic); }}
+                      className="card-surface p-3 text-left"
+                    >
+                      <p className="truncate text-sm font-bold">{f.topic}</p>
+                      <p className="text-[11px] text-muted">{f.currentStreak} day streak · {f.totalEntries} entries</p>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {topicFreq && (
+                <div className="card-surface p-4">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Activity size={14} className="text-accent" />
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-muted">{topicFreq.topic} activity</h3>
+                  </div>
+                  <div className="mb-3 flex gap-4 text-[11px] text-muted">
+                    <span><strong className="text-foreground">{topicFreq.currentStreak}</strong> day streak</span>
+                    <span><strong className="text-foreground">{topicFreq.longestStreak}</strong> best</span>
+                    <span><strong className="text-foreground">{topicFreq.totalEntries}</strong> total</span>
+                  </div>
+                  <FrequencyGrid days={topicFreq.days} />
+                  {stats.topics.length > 1 && (
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {stats.topics.map((t) => (
+                        <button
+                          key={t}
+                          type="button"
+                          onClick={() => setSelectedTopic(t)}
+                          className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${t === activeTopic ? "gradient-accent text-white" : "glass-dark text-muted"}`}
+                        >
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {stats.topics.length === 0 && (
+                <div className="card-surface p-6 text-center text-sm text-muted">
+                  Add events with skill tags to see topic frequency charts.
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

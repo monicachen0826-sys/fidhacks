@@ -14,9 +14,8 @@ const TABS = [
 
 export default function BottomTabBar() {
   const pathname = usePathname();
-  const isEventPage = pathname.startsWith("/event");
-
-  if (isEventPage) return null;
+  const isHiddenPage = pathname.startsWith("/event") || pathname === "/profile";
+  if (isHiddenPage) return null;
 
   return (
     <nav className="sticky bottom-0 z-40 shrink-0">

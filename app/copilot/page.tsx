@@ -1,8 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import { useState, useRef, useEffect } from "react";
 import { Sparkles, Send, BarChart3, FileText, Link2, MessageCircle } from "lucide-react";
 import { useLedger } from "@/lib/store";
+import { useOnboarding } from "@/lib/onboarding-store";
+import { sortCopilotPrompts } from "@/lib/personalization";
 import { COPILOT_PROMPTS, generateCopilotResponse, type CopilotPromptKey } from "@/lib/ai";
 import { AppHeader } from "@/components/AppHeader";
 import { cn } from "@/lib/utils";
@@ -17,6 +20,8 @@ const PROMPT_ICONS: Record<CopilotPromptKey, React.ComponentType<{ size?: number
 
 export default function CopilotPage() {
   const { events } = useLedger();
+  const { goals } = useOnboarding();
+  const sortedPrompts = useMemo(() => sortCopilotPrompts(COPILOT_PROMPTS, goals), [goals]);
   const [messages, setMessages] = useState<{ id: string; role: "user" | "assistant"; text: string }[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,7 +48,7 @@ export default function CopilotPage() {
 
         {messages.length === 0 && (
           <div className="mb-4 grid gap-2">
-            {COPILOT_PROMPTS.slice(0, 4).map((p) => {
+            {sortedPrompts.slice(0, 4).map((p) => {
               const Icon = PROMPT_ICONS[p.key];
               return (
                 <button key={p.key} type="button" onClick={() => sendMessage(p.label, p.key)} className="card-surface flex items-center gap-3 p-3 text-left">
