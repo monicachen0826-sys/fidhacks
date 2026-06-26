@@ -35,7 +35,7 @@ export default function HomePage() {
       </div>
 
       <div className="mt-5">
-        <SegmentedControl options={FILTERS} value={filter} onChange={setFilter} />
+        <SegmentedControl options={FILTERS} value={filter} onChange={setFilter} pill />
       </div>
 
       <div className="mt-6 flex items-start justify-between">
