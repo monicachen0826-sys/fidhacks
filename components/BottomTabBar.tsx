@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, BarChart3, Sparkles, Search, Plus } from "lucide-react";
+import { Clock, BarChart3, Sparkles, Lightbulb, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { href: "/", label: "Timeline", icon: Clock },
   { href: "/insights", label: "Insights", icon: BarChart3 },
-  { href: "/search", label: "Search", icon: Search },
+  { href: "/search", label: "Prompts", icon: Lightbulb },
   { href: "/copilot", label: "Copilot", icon: Sparkles },
 ];
 

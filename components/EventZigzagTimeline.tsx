@@ -42,6 +42,8 @@ export function EventZigzagTimeline({ events }: { events: Event[] }) {
 
   return (
     <div className="relative">
+      <div className="absolute bottom-6 left-[17px] top-6 w-[1.5px] bg-black/10" />
+
       <div className="space-y-7">
         {rows.map(({ event, year, showYear }, i) => {
           const size = BUBBLE_SIZE[event.significance];
@@ -49,10 +51,10 @@ export function EventZigzagTimeline({ events }: { events: Event[] }) {
 
           return (
             <div key={event.id} className="flex items-start gap-3">
-              <div className="flex w-9 shrink-0 flex-col items-center pt-1 text-center">
+              <div className="relative z-10 flex w-9 shrink-0 flex-col items-center pt-1 text-center">
                 {showYear && <p className="mb-1 text-[11px] font-semibold text-foreground/70">{year}</p>}
                 <p className="text-[11px] font-medium text-muted">{monthLabel(event.date)}</p>
-                <span className={cn("mt-1.5 h-2 w-2 rounded-full", GRADIENT_MAP[event.category])} />
+                <span className={cn("mt-1.5 h-2 w-2 rounded-full ring-2 ring-background", GRADIENT_MAP[event.category])} />
               </div>
 
               <div className={cn("flex flex-1", alignRight ? "justify-end" : "justify-start")}>
