@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { createClient, table, isSupabaseConfigured } from "@/lib/supabase/client";
+import { DEMO_PROFILE } from "@/lib/mock-people";
 
 interface Profile {
   id: string;
@@ -31,7 +32,9 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(
+    isSupabaseConfigured() ? null : DEMO_PROFILE
+  );
 
   async function loadProfile(userId: string) {
     const supabase = createClient();
