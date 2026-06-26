@@ -3,15 +3,20 @@
 import Link from "next/link";
 import { Plus, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Event, Category, Significance } from "@/lib/types";
+import type { Event, Significance } from "@/lib/types";
 
-const GRADIENT_MAP: Record<Category, string> = {
-  professional: "gradient-professional",
-  personal: "gradient-personal",
-  both: "gradient-accent",
-};
+const BUBBLE_COLORS = [
+  "gradient-bubble-1",
+  "gradient-bubble-2",
+  "gradient-bubble-3",
+  "gradient-bubble-4",
+  "gradient-bubble-5",
+  "gradient-bubble-6",
+];
 
 const BUBBLE_SIZE: Record<Significance, number> = { 1: 116, 2: 128, 3: 140, 4: 152, 5: 164 };
+
+const INDENTS = ["ml-0", "ml-10", "ml-4", "ml-14", "ml-2"];
 
 function monthLabel(date: string) {
   return new Date(date).toLocaleDateString(undefined, { month: "short" });
@@ -47,22 +52,24 @@ export function EventZigzagTimeline({ events }: { events: Event[] }) {
       <div className="space-y-7">
         {rows.map(({ event, year, showYear }, i) => {
           const size = BUBBLE_SIZE[event.significance];
-          const alignRight = i % 2 === 0;
+          const color = BUBBLE_COLORS[i % BUBBLE_COLORS.length];
+          const indent = INDENTS[i % INDENTS.length];
 
           return (
             <div key={event.id} className="flex items-start gap-3">
               <div className="relative z-10 flex w-9 shrink-0 flex-col items-center pt-1 text-center">
                 {showYear && <p className="mb-1 text-[11px] font-semibold text-foreground/70">{year}</p>}
                 <p className="text-[11px] font-medium text-muted">{monthLabel(event.date)}</p>
-                <span className={cn("mt-1.5 h-2 w-2 rounded-full ring-2 ring-background", GRADIENT_MAP[event.category])} />
+                <span className={cn("mt-1.5 h-2 w-2 rounded-full ring-2 ring-background", color)} />
               </div>
 
-              <div className={cn("flex flex-1", alignRight ? "justify-end" : "justify-start")}>
+              <div className="flex flex-1 justify-end">
                 <Link
                   href={`/event/${event.id}`}
                   className={cn(
                     "relative flex flex-col items-center justify-center rounded-full p-3 text-center text-white shadow-lg",
-                    GRADIENT_MAP[event.category]
+                    color,
+                    indent
                   )}
                   style={{ width: size, height: size }}
                 >

@@ -40,8 +40,8 @@ export default function HomePage() {
 
       <div className="mt-6 flex items-start justify-between">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight">Your timeline</h2>
-          <p className="text-sm text-muted">Every experience shapes your journey.</p>
+          <h2 className="text-xl font-semibold tracking-tight">Timeline</h2>
+          <p className="text-sm text-muted">Your life. Visualized.</p>
         </div>
         <div className="flex items-center gap-2">
           <button aria-label="Filter options" className="flex h-8 w-8 items-center justify-center rounded-full card-surface">
