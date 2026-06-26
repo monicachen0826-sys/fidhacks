@@ -90,8 +90,8 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
   return (
     <>
       <button type="button" className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-label="Close menu" />
-      <nav className="fixed left-0 top-0 z-50 flex h-full w-64 flex-col border-r border-white/10 bg-[#141428] shadow-2xl">
-        <div className="flex items-center justify-between border-b border-white/10 px-4 py-4">
+      <nav className="fixed left-0 top-0 z-50 flex h-full w-64 flex-col border-r border-black/10 bg-white shadow-2xl">
+        <div className="flex items-center justify-between border-b border-black/10 px-4 py-4">
           <span className="serif-heading text-lg text-foreground">My Multiverse</span>
           <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full text-muted">
             <X size={18} />
@@ -103,7 +103,7 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className="rounded-xl px-4 py-3 text-[14px] font-medium text-foreground/90 transition-colors hover:bg-white/5"
+              className="rounded-xl px-4 py-3 text-[14px] font-medium text-foreground/90 transition-colors hover:bg-black/5"
             >
               {link.label}
             </Link>

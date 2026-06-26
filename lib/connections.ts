@@ -113,6 +113,24 @@ export async function listConnections(userId: string) {
           requester: DEMO_PROFILE,
           recipient: findDemoPerson("mock-4"),
         },
+        {
+          id: "demo-conn-seed-3",
+          status: "accepted",
+          requester: findDemoPerson("mock-10"),
+          recipient: DEMO_PROFILE,
+        },
+        {
+          id: "demo-conn-seed-4",
+          status: "pending",
+          requester: findDemoPerson("mock-14"),
+          recipient: DEMO_PROFILE,
+        },
+        {
+          id: "demo-conn-seed-5",
+          status: "accepted",
+          requester: DEMO_PROFILE,
+          recipient: findDemoPerson("mock-7"),
+        },
       ];
       saveDemoConnections(seeded);
       return seeded;

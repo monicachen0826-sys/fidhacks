@@ -13,7 +13,7 @@ function level(count: number, max: number) {
 }
 
 const LEVEL_CLASS = [
-  "bg-white/5",
+  "bg-black/5",
   "bg-accent/25",
   "bg-accent/45",
   "bg-accent/65",

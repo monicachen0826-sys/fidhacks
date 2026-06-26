@@ -15,7 +15,7 @@ export function SegmentedControl<T extends string>({
 }) {
   if (variant === "underline") {
     return (
-      <div className="flex gap-4 border-b border-white/10">
+      <div className="flex gap-4 border-b border-black/10">
         {options.map((opt) => (
           <button
             key={opt.value}

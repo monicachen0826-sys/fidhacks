@@ -16,7 +16,7 @@ export function AiSummaryCard({ text, tags }: { text: string; tags?: string[] })
         {tags && tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {tags.map((t) => (
-              <span key={t} className="rounded-full bg-white/5 px-2.5 py-1 text-[10px] font-medium text-muted">
+              <span key={t} className="rounded-full bg-black/5 px-2.5 py-1 text-[10px] font-medium text-muted">
                 {t}
               </span>
             ))}

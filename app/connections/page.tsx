@@ -127,7 +127,7 @@ export default function ConnectionsPage() {
                     <button
                       type="button"
                       onClick={() => handleRespond(c.id, "declined")}
-                      className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-muted"
+                      className="flex h-7 w-7 items-center justify-center rounded-full bg-black/10 text-muted"
                       aria-label="Decline"
                     >
                       <X size={14} />

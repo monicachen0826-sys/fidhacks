@@ -87,7 +87,7 @@ export default function TimelineView() {
     <div className="relative min-h-full">
       <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-      <header className="sticky top-0 z-30 bg-[#0a0a1a]/80 backdrop-blur-md">
+      <header className="sticky top-0 z-30 bg-[#f7f7fb]/80 backdrop-blur-md">
         <AppHeader onMenuClick={() => setMenuOpen(true)} profileName={profile.name} />
         <div className="px-4 pb-3">
           <SegmentedControl options={filterOptions} value={filter} onChange={setFilter} />
@@ -133,7 +133,7 @@ export default function TimelineView() {
                     <div className="timeline-axis absolute bottom-0 left-[22px] top-0 w-px" />
                     <div className="relative flex h-full flex-col justify-center">
                       <span className="pl-1 text-[11px] font-medium text-muted">{formatDate(event.date)}</span>
-                      <div className={cn("absolute left-[18px] top-1/2 h-2 w-2 -translate-y-1/2 rounded-full ring-2 ring-[#0a0a1a]", DOT_COLORS[tone])} />
+                      <div className={cn("absolute left-[18px] top-1/2 h-2 w-2 -translate-y-1/2 rounded-full ring-2 ring-[#f7f7fb]", DOT_COLORS[tone])} />
                     </div>
                   </div>
                   <div className="flex flex-1 items-center py-2">

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { Bubble, getBubbleTone } from "@/components/Bubble";
-import { createClient, table } from "@/lib/supabase/client";
+import { createClient, table, isSupabaseConfigured } from "@/lib/supabase/client";
+import { MOCK_PEOPLE, MOCK_EVENTS_BY_PERSON, DEMO_PROFILE } from "@/lib/mock-people";
 import type { Category, Significance } from "@/lib/types";
 
 interface RemoteProfile {
@@ -32,6 +33,21 @@ export default function PublicProfilePage() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      if (!isSupabaseConfigured()) {
+        const person =
+          username === DEMO_PROFILE.username
+            ? DEMO_PROFILE
+            : MOCK_PEOPLE.find((p) => p.username === username);
+        if (!person) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        setProfile(person as RemoteProfile);
+        setEvents((MOCK_EVENTS_BY_PERSON[person.id] ?? []) as RemoteEvent[]);
+        setLoading(false);
+        return;
+      }
       const supabase = createClient();
       const { data: person } = await table(supabase, "profiles")
         .select("id, username, display_name, bio")

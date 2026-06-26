@@ -121,7 +121,7 @@ export default function NewEventPage() {
           <label className="mb-1.5 block text-xs font-semibold text-muted">Evidence</label>
           <button
             type="button"
-            className="flex h-24 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-white/10 glass-dark text-sm text-muted"
+            className="flex h-24 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-black/10 glass-dark text-sm text-muted"
           >
             <Upload size={20} />
             Upload photo or document

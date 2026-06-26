@@ -31,7 +31,7 @@ export function OnboardingFlow() {
     <div className="flex h-full min-h-[700px] flex-col px-5 pt-6">
       <div className="mb-5 flex justify-center gap-1.5">
         {(["intro", "checklist", "goals"] as Step[]).map((s) => (
-          <span key={s} className={cn("h-1.5 w-8 rounded-full", step === s ? "gradient-accent" : "bg-white/10")} />
+          <span key={s} className={cn("h-1.5 w-8 rounded-full", step === s ? "gradient-accent" : "bg-black/10")} />
         ))}
       </div>
 
@@ -71,7 +71,7 @@ export function OnboardingFlow() {
                   <span
                     className={cn(
                       "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
-                      checked ? "gradient-accent border-transparent text-white" : "border-white/20"
+                      checked ? "gradient-accent border-transparent text-white" : "border-black/20"
                     )}
                   >
                     {checked && <Check size={12} strokeWidth={3} />}

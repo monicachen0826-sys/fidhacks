@@ -79,7 +79,7 @@ export default function InsightsPage() {
                         <span className="font-semibold">{skill}</span>
                         <span className="font-bold text-accent">{pct}%</span>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-white/5">
+                      <div className="h-2 overflow-hidden rounded-full bg-black/5">
                         <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: SKILL_COLORS[i % SKILL_COLORS.length] }} />
                       </div>
                     </div>

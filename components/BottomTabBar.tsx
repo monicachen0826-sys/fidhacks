@@ -20,7 +20,7 @@ export default function BottomTabBar() {
 
   return (
     <nav className="sticky bottom-0 z-40 shrink-0">
-      <div className="relative border-t border-white/10 bg-[#0a0a1a]/95 pb-safe backdrop-blur-xl">
+      <div className="relative border-t border-black/10 bg-white/95 pb-safe backdrop-blur-xl">
         <div className="flex items-center justify-around px-6 py-2.5">
           {TABS.map(({ href, icon: Icon }) => {
             const active = pathname === href;
