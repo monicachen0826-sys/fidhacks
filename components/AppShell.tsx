@@ -15,8 +15,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {!completed ? (
         <OnboardingFlow />
       ) : (
-        <div className="relative flex min-h-full flex-col">
-          <main className="flex-1 pb-20">{children}</main>
+        <div className="relative flex flex-1 flex-col">
+          <main className="flex flex-1 flex-col pb-20">{children}</main>
           <BottomTabBar />
         </div>
       )}
