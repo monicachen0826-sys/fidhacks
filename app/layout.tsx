@@ -4,8 +4,8 @@ import { LedgerProvider } from "@/lib/store";
 import BottomTabBar from "@/components/BottomTabBar";
 
 export const metadata: Metadata = {
-  title: "Proof-of-Skill Ledger",
-  description: "Document your growth — one win at a time.",
+  title: "Probble",
+  description: "Every milestone. Every win. Forever.",
 };
 
 export const viewport: Viewport = {

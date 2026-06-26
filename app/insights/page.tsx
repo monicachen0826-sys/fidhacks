@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Flame } from "lucide-react";
+import { Flame, Star, Zap, Briefcase } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,8 +15,25 @@ function monthLabel(key: string) {
   return new Date(`${key}-01`).toLocaleDateString(undefined, { month: "short" });
 }
 
+const SKILL_COLORS = [
+  "bg-violet-500",
+  "bg-pink-500",
+  "bg-emerald-500",
+  "bg-amber-500",
+  "bg-blue-500",
+  "bg-red-500",
+  "bg-cyan-500",
+  "bg-fuchsia-500",
+];
+
 export default function InsightsPage() {
   const { events } = useLedger();
+
+  const headerStats = useMemo(() => {
+    const microWins = events.reduce((sum, e) => sum + e.subEvents.length, 0);
+    const portfolio = events.filter((e) => e.visibility === "portfolio").length;
+    return { events: events.length, microWins, portfolio };
+  }, [events]);
 
   const stats = useMemo(() => {
     const skillCounts = new Map<string, number>();
@@ -76,6 +93,24 @@ export default function InsightsPage() {
         <h1 className="mt-1 text-[26px] font-semibold tracking-tight">Insights</h1>
       </header>
 
+      <div className="mb-5 grid grid-cols-3 gap-2.5">
+        <div className="card-surface flex flex-col items-center gap-1.5 p-3 text-center">
+          <Star size={16} className="text-[#8a5cf6]" />
+          <p className="text-lg font-semibold leading-none">{headerStats.events}</p>
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted">Events</p>
+        </div>
+        <div className="card-surface flex flex-col items-center gap-1.5 p-3 text-center">
+          <Zap size={16} className="text-[#ff7a8a]" />
+          <p className="text-lg font-semibold leading-none">{headerStats.microWins}</p>
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted">Micro-wins</p>
+        </div>
+        <div className="card-surface flex flex-col items-center gap-1.5 p-3 text-center">
+          <Briefcase size={16} className="text-[#34d399]" />
+          <p className="text-lg font-semibold leading-none">{headerStats.portfolio}</p>
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted">Portfolio</p>
+        </div>
+      </div>
+
       <Tabs defaultValue="skills">
         <TabsList className="mb-5">
           <TabsTrigger value="skills">Skills</TabsTrigger>
@@ -85,22 +120,26 @@ export default function InsightsPage() {
 
         <TabsContent value="skills">
           <Card>
-            <h2 className="mb-3 text-sm font-semibold">Top Skills</h2>
+            <h2 className="text-sm font-semibold">Skill Growth</h2>
+            <p className="mb-3 text-xs text-muted">See how your skills have grown over time.</p>
             <div className="space-y-3">
-              {stats.topSkills.map(([skill, count]) => (
-                <div key={skill}>
-                  <div className="mb-1 flex items-center justify-between text-[13px]">
-                    <span className="font-medium">{skill}</span>
-                    <span className="text-muted">{count}</span>
+              {stats.topSkills.map(([skill, count], i) => {
+                const pct = Math.round((count / stats.maxSkillCount) * 100);
+                return (
+                  <div key={skill}>
+                    <div className="mb-1 flex items-center justify-between text-[13px]">
+                      <span className="font-medium">{skill}</span>
+                      <span className="text-muted">{pct}%</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-black/5">
+                      <div
+                        className={`h-full rounded-full ${SKILL_COLORS[i % SKILL_COLORS.length]}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-black/5">
-                    <div
-                      className="h-full gradient-accent"
-                      style={{ width: `${(count / stats.maxSkillCount) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
               {stats.topSkills.length === 0 && <p className="text-sm text-muted">Log events to see your top skills.</p>}
             </div>
           </Card>

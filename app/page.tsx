@@ -1,89 +1,72 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { Star, Zap, Sparkles } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { SegmentedControl } from "@/components/SegmentedControl";
-import { EventTimelineRow } from "@/components/EventTimelineRow";
-import { ScreenHeader } from "@/components/ScreenHeader";
+import { EventClusterMap } from "@/components/EventClusterMap";
 
-type LifeFilter = "life" | "professional" | "personal";
+type LifeFilter = "all" | "professional" | "personal" | "portfolio";
 
 const FILTERS: { value: LifeFilter; label: string }[] = [
-  { value: "life", label: "Life" },
+  { value: "all", label: "All" },
   { value: "professional", label: "Professional" },
   { value: "personal", label: "Personal" },
+  { value: "portfolio", label: "Portfolio" },
 ];
-
-function monthLabel(date: string) {
-  return new Date(date).toLocaleDateString(undefined, { month: "short" });
-}
-
-function yearLabel(date: string) {
-  return new Date(date).getFullYear().toString();
-}
 
 export default function HomePage() {
   const { events } = useLedger();
-  const [filter, setFilter] = useState<LifeFilter>("life");
+  const [filter, setFilter] = useState<LifeFilter>("all");
 
   const visible = useMemo(() => {
     const sorted = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    const filtered = filter === "life" ? sorted : sorted.filter((e) => e.category === filter || e.category === "both");
-    return filtered.reduce<{ event: typeof filtered[number]; showMonthLabel: boolean }[]>((acc, event) => {
-      const monthKey = `${yearLabel(event.date)}-${monthLabel(event.date)}`;
-      const prevKey = acc.length
-        ? `${yearLabel(acc[acc.length - 1].event.date)}-${monthLabel(acc[acc.length - 1].event.date)}`
-        : "";
-      acc.push({ event, showMonthLabel: monthKey !== prevKey });
-      return acc;
-    }, []);
+    if (filter === "all") return sorted;
+    if (filter === "portfolio") return sorted.filter((e) => e.visibility === "portfolio");
+    return sorted.filter((e) => e.category === filter || e.category === "both");
   }, [events, filter]);
+
+  const stats = useMemo(() => {
+    const microWins = events.reduce((sum, e) => sum + e.subEvents.length, 0);
+    const skillSet = new Set<string>();
+    for (const e of events) {
+      for (const s of e.skills) skillSet.add(s);
+      for (const se of e.subEvents) for (const s of se.skillTags) skillSet.add(s);
+    }
+    return { events: events.length, microWins, skills: skillSet.size };
+  }, [events]);
 
   return (
     <div className="relative px-5 pt-6">
-      <ScreenHeader
-        title="Your Journey"
-        subtitle="Proof-of-Skill Ledger"
-        right={
-          <Link
-            href="/portfolio"
-            aria-label="Open portfolio"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-foreground"
-          >
-            <BookOpen size={16} />
-          </Link>
-        }
-      />
+      <p className="text-xs font-medium uppercase tracking-wide text-muted">Your Story</p>
+      <h1 className="mt-1 text-[28px] font-semibold tracking-tight">Probble</h1>
+      <p className="text-sm text-muted">Every milestone. Every win. Forever.</p>
 
-      <div className="mb-6">
+      <div className="mt-5 grid grid-cols-3 gap-2.5">
+        <div className="card-surface flex flex-col items-center gap-1.5 p-3 text-center">
+          <Star size={16} className="text-[#8a5cf6]" />
+          <p className="text-lg font-semibold leading-none">{stats.events}</p>
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted">Events</p>
+        </div>
+        <div className="card-surface flex flex-col items-center gap-1.5 p-3 text-center">
+          <Zap size={16} className="text-[#ff7a8a]" />
+          <p className="text-lg font-semibold leading-none">{stats.microWins}</p>
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted">Micro-wins</p>
+        </div>
+        <div className="card-surface flex flex-col items-center gap-1.5 p-3 text-center">
+          <Sparkles size={16} className="text-[#ff9f5a]" />
+          <p className="text-lg font-semibold leading-none">{stats.skills}</p>
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted">Skills</p>
+        </div>
+      </div>
+
+      <div className="my-5">
         <SegmentedControl options={FILTERS} value={filter} onChange={setFilter} />
       </div>
 
-      {visible.length === 0 ? (
-        <div className="card-surface flex flex-col items-center gap-2 p-8 text-center">
-          <p className="text-sm text-muted">Nothing here yet — log your first win.</p>
-        </div>
-      ) : (
-        <div>
-          {visible.map(({ event, showMonthLabel }, i) => (
-            <div key={event.id} className="flex gap-3">
-              <div className="w-10 shrink-0 pt-2 text-right">
-                {showMonthLabel && (
-                  <>
-                    <p className="text-[11px] font-semibold text-foreground/70">{monthLabel(event.date)}</p>
-                    <p className="text-[10px] text-muted">{yearLabel(event.date)}</p>
-                  </>
-                )}
-              </div>
-              <div className="flex-1">
-                <EventTimelineRow event={event} isLast={i === visible.length - 1} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="card-surface overflow-hidden p-4">
+        <EventClusterMap events={visible} width={308} />
+      </div>
     </div>
   );
 }

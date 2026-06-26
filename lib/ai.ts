@@ -36,12 +36,12 @@ export type CopilotPromptKey =
   | "connect-growth"
   | "reflect";
 
-export const COPILOT_PROMPTS: { key: CopilotPromptKey; label: string; description: string }[] = [
-  { key: "summarize-growth", label: "Summarize my growth", description: "A high-level look at your progress so far" },
-  { key: "strongest-skills", label: "Identify my strongest skills", description: "Spot the skills that show up again and again" },
-  { key: "resume-language", label: "Turn this into resume language", description: "Convert your wins into resume-ready bullets" },
-  { key: "connect-growth", label: "Connect my personal and professional growth", description: "See how the two sides reinforce each other" },
-  { key: "reflect", label: "Help me reflect", description: "A prompt to think deeper about your journey" },
+export const COPILOT_PROMPTS: { key: CopilotPromptKey; label: string; description: string; emoji: string; title: string }[] = [
+  { key: "summarize-growth", label: "Summarize my growth", description: "A high-level look at your progress so far", emoji: "🌟", title: "Summarize Your Growth" },
+  { key: "strongest-skills", label: "Identify my strongest skills", description: "Spot the skills that show up again and again", emoji: "💪", title: "Strongest Skills" },
+  { key: "resume-language", label: "Turn this into resume language", description: "Convert your wins into resume-ready bullets", emoji: "📝", title: "Resume Language" },
+  { key: "connect-growth", label: "Connect my personal and professional growth", description: "See how the two sides reinforce each other", emoji: "🔗", title: "Connect Your Growth" },
+  { key: "reflect", label: "Help me reflect", description: "A prompt to think deeper about your journey", emoji: "🪞", title: "Reflect & Articulate" },
 ];
 
 export function generateCopilotResponse(

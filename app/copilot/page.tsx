@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { useLedger } from "@/lib/store";
 import { COPILOT_PROMPTS, generateCopilotResponse, routeFreeTextPrompt, type CopilotPromptKey } from "@/lib/ai";
 import { AiSummaryCard } from "@/components/AiSummaryCard";
@@ -30,30 +30,30 @@ export default function CopilotPage() {
     setInput("");
   }
 
+  const activePrompt = active ? COPILOT_PROMPTS.find((p) => p.key === active) : null;
+
   return (
     <div className="flex h-full flex-col px-5 pt-6">
       <header className="mb-6">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted">Growth Companion</p>
-        <h1 className="mt-1 text-[26px] font-semibold tracking-tight">Hi — what would you like to explore?</h1>
+        <p className="text-xs font-medium uppercase tracking-wide text-muted">AI Copilot</p>
+        <h1 className="mt-1 text-[26px] font-semibold tracking-tight">
+          {activePrompt ? activePrompt.title : "Hi! 👋 What would you like to explore?"}
+        </h1>
+        <p className="mt-1 text-xs text-muted">Powered by {events.length} documented events</p>
       </header>
 
       <div className="flex-1 overflow-y-auto pb-28">
-        <div className="mb-5 grid grid-cols-1 gap-2.5">
+        <div className="mb-5 flex gap-2 overflow-x-auto whitespace-nowrap pb-1">
           {COPILOT_PROMPTS.map((p) => (
             <button
               key={p.key}
               onClick={() => runPrompt(p.key)}
-              className={`card-surface flex items-center gap-3 p-4 text-left transition-all active:scale-[0.98] ${
+              className={`card-surface flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-left transition-all active:scale-[0.98] ${
                 active === p.key ? "ring-2 ring-[#8a5cf6]/40" : ""
               }`}
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full gradient-accent text-white">
-                <Sparkles size={15} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[14px] font-medium leading-tight">{p.label}</p>
-                <p className="truncate text-xs text-muted">{p.description}</p>
-              </div>
+              <span className="text-sm">{p.emoji}</span>
+              <span className="text-[13px] font-medium">{p.label}</span>
             </button>
           ))}
         </div>
