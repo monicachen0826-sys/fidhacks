@@ -9,6 +9,7 @@ import BottomTabBar from "@/components/BottomTabBar";
 export const metadata: Metadata = {
   title: "Probble",
   description: "Your life. Visualized.",
+  generator: "Probble",
 };
 
 export const viewport: Viewport = {
